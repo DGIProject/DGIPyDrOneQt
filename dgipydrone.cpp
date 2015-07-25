@@ -321,3 +321,17 @@ void DGIpydrOne::on_degreesDial_valueChanged(int value)
 
     controller->updateOrientationDegrees(value);
 }
+
+void DGIpydrOne::on_leftRightCalibrate_valueChanged(int value)
+{
+    qDebug() << value;
+
+    controller->sendCalibrate(value, ui->frontBackCalibrate->value());
+}
+
+void DGIpydrOne::on_frontBackCalibrate_valueChanged(int value)
+{
+    qDebug() << value;
+
+    controller->sendCalibrate(ui->leftRightCalibrate->value(), value);
+}

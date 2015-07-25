@@ -27,6 +27,8 @@ public:
 
     void updateValues(float, float, int);
 
+    void sendCalibrate(int, int);
+
 private:
     QTcpSocket *socket;
 
@@ -41,19 +43,25 @@ private:
 
     quint16 sizeMessage;
 
-    float posX;
-    float posY;
-
     int power;
 
     float degrees;
+
+    float posX;
+    float posY;
+
+    int controlMode;
+
+    int leftRightCalibrate;
+    int frontBackCalibrate;
 
     float maxPower;
     float maxAngle;
     int sensibility;
 
-    void analyzeCommand(QString);
+    QString lastCommand;
 
+    void analyzeCommand(QString);
     void stopTimer();
 
 private slots:
@@ -64,6 +72,7 @@ private slots:
 
     void actualizeConnectionTime();
     void sendCommandMotor();
+    void sendLastCommand();
 
 signals:
     void updateStatutConnection(QString);
