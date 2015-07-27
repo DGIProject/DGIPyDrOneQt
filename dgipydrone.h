@@ -4,6 +4,7 @@
 #include "remotecontroller.h"
 #include "profileeditor.h"
 #include "joystickrect.h"
+#include "xinputGamepad.h"
 #include <QMainWindow>
 #include <QtNetwork/QTcpSocket>
 #include <QScrollBar>
@@ -42,10 +43,6 @@ private slots:
     void on_checkLED_clicked();
 
     void on_degreesDial_valueChanged(int value);
-
-    void on_leftRightCalibrate_valueChanged(int value);
-
-    void on_frontBackCalibrate_valueChanged(int value);
 
 private:
     Ui::DGIpydrOne *ui;
@@ -92,6 +89,14 @@ private:
     QGraphicsItem *backSonar;
     QGraphicsItem *upSonar;
     QGraphicsItem *downSonar;
+
+    XInput input;
+    QTimer tmr;
+
+    bool f_haveJoystick, cancelJoystick = false;
+
+public slots:
+    void readJoystickState();
 };
 
 #endif // DGIPYDRONE_H

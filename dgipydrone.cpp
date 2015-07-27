@@ -7,6 +7,18 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    f_haveJoystick = input.initInput(0);
+
+    if (f_haveJoystick)
+    {
+        ui->checkGamePad->setChecked(true);
+        tmr.setInterval(15);
+        connect(&tmr,SIGNAL(timeout()),this,SLOT(readJoystickState()));
+        tmr.start();
+    }
+
+
+
     ui->connectBeforeWidget->show();
 
     ui->buttonCancelConnect->setEnabled(false);
@@ -322,16 +334,45 @@ void DGIpydrOne::on_degreesDial_valueChanged(int value)
     controller->updateOrientationDegrees(value);
 }
 
-void DGIpydrOne::on_leftRightCalibrate_valueChanged(int value)
+void DGIpydrOne::readJoystickState()
 {
-    qDebug() << value;
+    if (!ui->checkGamePad->isChecked()) return;
 
-    controller->sendCalibrate(value, ui->frontBackCalibrate->value());
+    if (!input.updateState()) return;
+
+    // Update main axes
+    /*  ui->sliderVertical->setValue((input.getVertical()+1.0f)*50.0f);
+    ui->sliderHorizontal->setValue((input.getHorizontal()+1.0f)*50.0f);
+    ui->dialRotation->setValue((input.getRotationZ()+1.0f)*50.0f);
+    ui->dialThrottle->setValue((input.getThrottle()+1.0f)*50.0f);*/
+
+
+    //qDebug() << input.getVertical() << " " << input.getHorizontal() << " " << input.getRotationZ() << input.getThrottle();
+    int newThrottleValue = (int)(((-input.getVertical()*100)+100)/2);
+    if (ui->throttleSlider->value() != newThrottleValue )
+    {
+        ui->throttleSlider->setValue(newThrottleValue);
+        controller->updatePositionTrottle(ui->throttleSlider->value());
+    }
+
+    int x = (int) (((input.getThrottle()*140)+140)/2), y= (int) (((input.getRotationZ()*140)+140)/2);
+    if (joystick->_location.x() != x || joystick->_location.y() != y )
+    {
+        joystick->setPosDirect( x , y );
+
+    }
+
+
+    // Output buttns' state
+    /* for (int r = 0; r < input.rows(); r++)
+    {
+      //  tblButtons.setText( r,0,QString("%1").arg(r) );
+
+        bool isPressed = input.isKeyPressed(r);
+        QString stateString("-");
+        if (isPressed) stateString = QString("Pressed");
+        qDebug() << r << "is pressend";
+      //  tblButtons.setText( r,1, stateString );
+    }*/
 }
 
-void DGIpydrOne::on_frontBackCalibrate_valueChanged(int value)
-{
-    qDebug() << value;
-
-    controller->sendCalibrate(ui->leftRightCalibrate->value(), value);
-}
