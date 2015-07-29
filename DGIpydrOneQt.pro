@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         dgipydrone.cpp \
     joystickrect.cpp \
     remotecontroller.cpp \
-    profileeditor.cpp
+    profileeditor.cpp \
+    qcgaugewidget.cpp
 
 HEADERS  += dgipydrone.h \
     joystickrect.h \
     remotecontroller.h \
-    profileeditor.h
+    profileeditor.h \
+    qcgaugewidget.h
 
 FORMS    += dgipydrone.ui
 

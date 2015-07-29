@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QtMath>
 #include <QByteArray>
+#include "qcgaugewidget.h"
 
 class remoteController : public QObject
 {
@@ -61,8 +62,13 @@ private:
 
     QString lastCommand;
 
+    int rNumber;
+    int lastRNumber;
+
     void analyzeCommand(QString);
     void stopTimer();
+
+    int randInt(int, int);
 
 private slots:
     void dataReceive();

@@ -11,7 +11,60 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 
     ui->buttonCancelConnect->setEnabled(false);
 
-    ui->batteryLevelBar->setOrientation(Qt::Vertical);
+    mCompassGauge = new QcGaugeWidget;
+   // mCompassGauge->setGeometry(0,0,75,75);
+    mCompassGauge->addBackground(99);
+    QcBackgroundItem *bkg1 = mCompassGauge->addBackground(92);
+    bkg1->clearrColors();
+    bkg1->addColor(0.1,Qt::black);
+    bkg1->addColor(1.0,Qt::white);
+
+    QcBackgroundItem *bkg2 = mCompassGauge->addBackground(88);
+    bkg2->clearrColors();
+    bkg2->addColor(0.1,Qt::white);
+    bkg2->addColor(1.0,Qt::black);
+
+    QcLabelItem *w = mCompassGauge->addLabel(80);
+    w->setText("W");
+    w->setAngle(270);
+    w->setColor(Qt::white);
+
+    QcLabelItem *n = mCompassGauge->addLabel(80);
+    n->setText("N");
+    n->setAngle(0);
+    n->setColor(Qt::white);
+
+    QcLabelItem *e = mCompassGauge->addLabel(80);
+    e->setText("E");
+    e->setAngle(90);
+    e->setColor(Qt::white);
+
+    QcLabelItem *s = mCompassGauge->addLabel(80);
+    s->setText("S");
+    s->setAngle(180);
+    s->setColor(Qt::white);
+
+    QcDegreesItem *deg = mCompassGauge->addDegrees(70);
+    deg->setStep(5);
+    deg->setMaxDegree(270);
+    deg->setMinDegree(-75);
+    deg->setColor(Qt::white);
+
+    mCompassNeedle2 = mCompassGauge->addNeedle(60);
+    mCompassNeedle2->setNeedle(QcNeedleItem::DiamonNeedle);
+    mCompassNeedle2->setValueRange(0,360);
+    mCompassNeedle2->setMaxDegree(360);
+    mCompassNeedle2->setMinDegree(0);
+    mCompassNeedle2->setCurrentValue(150);
+
+    mCompassNeedle = mCompassGauge->addNeedle(60);
+    mCompassNeedle->setNeedle(QcNeedleItem::CompassNeedle);
+    mCompassNeedle->setValueRange(0,360);
+    mCompassNeedle->setMaxDegree(360);
+    mCompassNeedle->setMinDegree(0);
+    mCompassGauge->addBackground(7);
+    mCompassGauge->addGlass(88);
+    ui->verticalLayout->addWidget(mCompassGauge);
 
     controller = new remoteController();
 
@@ -155,6 +208,7 @@ void DGIpydrOne::updateTextInformation(QString type, int value)
         break;
     case 12:
         vDegrees = value;
+        mCompassNeedle->setCurrentValue(vDegrees);
         break;
     case 13:
         vVerticalSpeed = value;
@@ -315,13 +369,6 @@ void DGIpydrOne::drawDroneInformations()
     ui->sonarView->setScene(sceneSonar);
 }
 
-void DGIpydrOne::on_degreesDial_valueChanged(int value)
-{
-    qDebug() << value;
-
-    controller->updateOrientationDegrees(value);
-}
-
 void DGIpydrOne::on_leftRightCalibrate_valueChanged(int value)
 {
     qDebug() << value;
@@ -334,4 +381,46 @@ void DGIpydrOne::on_frontBackCalibrate_valueChanged(int value)
     qDebug() << value;
 
     controller->sendCalibrate(ui->leftRightCalibrate->value(), value);
+}
+
+void DGIpydrOne::on_checkCollision_clicked()
+{
+    if(ui->checkCollision->isChecked()) {
+        controller->sendCommand("S Y");
+    }
+    else {
+        controller->sendCommand("S N");
+    }
+}
+
+void DGIpydrOne::on_manualMode_clicked()
+{
+    if(ui->manualMode->isChecked()) {
+        controller->sendCommand("M 0");
+    }
+}
+
+void DGIpydrOne::on_automaticMode_clicked()
+{
+    if(ui->automaticMode->isChecked()) {
+        controller->sendCommand("M 1");
+    }
+}
+
+void DGIpydrOne::on_buttonCalibrateDrone_clicked()
+{
+    controller->sendCommand("A Y");
+}
+
+void DGIpydrOne::on_buttonLessCompass_clicked()
+{
+    mCompassNeedle2->setCurrentValue(mCompassNeedle2->currentValue()-1);
+    controller->updateOrientationDegrees(mCompassNeedle2->currentValue());
+    qDebug() << mCompassNeedle2->position();
+}
+
+void DGIpydrOne::on_buttonMoreCompass_clicked()
+{
+    mCompassNeedle2->setCurrentValue(mCompassNeedle2->currentValue()+1);
+    controller->updateOrientationDegrees(mCompassNeedle2->currentValue());
 }

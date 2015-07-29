@@ -100,11 +100,11 @@ void remoteController::updateLED(bool switchOn)
     qDebug() << "update LED";
 
     if(switchOn) {
-        sendCommand("LED ON");
+        sendCommand("L Y");
     }
     else
     {
-        sendCommand("LED OFF");
+        sendCommand("L N");
     }
 }
 
@@ -211,6 +211,21 @@ void remoteController::sendCommand(QString command)
     //analyzeCommand(command);
 
     if(connectionStatut == 2) {
+        rNumber = randInt(0, 9);
+
+        if(rNumber == lastRNumber) {
+            if(rNumber == 9) {
+                rNumber = 0;
+            }
+            else {
+                rNumber ++;
+            }
+        }
+
+        lastRNumber = rNumber;
+
+        //socket->write(QByteArray(QString("C " + command + "|" + QString::number(rNumber)).toStdString().c_str()));
+
         socket->write(QByteArray(QString("C " + command).toStdString().c_str()));
     }
 
@@ -309,4 +324,9 @@ void remoteController::updateValues(float nMaxPower, float nMaxAngle, int nSensi
     maxPower = nMaxPower;
     maxAngle = nMaxAngle;
     sensibility = nSensibility;
+}
+
+int remoteController::randInt(int low, int high)
+{
+    return qrand() % ((high + 1) - low) + low;
 }

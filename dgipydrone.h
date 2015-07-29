@@ -41,11 +41,21 @@ private slots:
 
     void on_checkLED_clicked();
 
-    void on_degreesDial_valueChanged(int value);
-
     void on_leftRightCalibrate_valueChanged(int value);
 
     void on_frontBackCalibrate_valueChanged(int value);
+
+    void on_checkCollision_clicked();
+
+    void on_manualMode_clicked();
+
+    void on_automaticMode_clicked();
+
+    void on_buttonCalibrateDrone_clicked();
+
+    void on_buttonLessCompass_clicked();
+
+    void on_buttonMoreCompass_clicked();
 
 private:
     Ui::DGIpydrOne *ui;
@@ -68,6 +78,9 @@ private:
     vPressure,
     vTemperature,
     vHumidity;
+
+    QcGaugeWidget *mCompassGauge;
+    QcNeedleItem *mCompassNeedle, *mCompassNeedle2;
 
     remoteController *controller;
 
