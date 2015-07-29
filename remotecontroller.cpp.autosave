@@ -224,9 +224,9 @@ void remoteController::sendCommand(QString command)
 
         lastRNumber = rNumber;
 
-        //socket->write(QByteArray(QString("C " + command + "|" + QString::number(rNumber)).toStdString().c_str()));
-
-        socket->write(QByteArray(QString("C " + command).toStdString().c_str()));
+        socket->write(QByteArray(QString("C " + command + " " + QString::number(rNumber)).toStdString().c_str()));
+        
+        //socket->write(QByteArray(QString("C " + command).toStdString().c_str()));
     }
 
     lastCommand = command;

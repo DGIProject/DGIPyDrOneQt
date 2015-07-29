@@ -4,7 +4,6 @@
 #include "remotecontroller.h"
 #include "profileeditor.h"
 #include "joystickrect.h"
-#include "xinputGamepad.h"
 #include <QMainWindow>
 #include <QtNetwork/QTcpSocket>
 #include <QScrollBar>
@@ -27,7 +26,7 @@ public:
     ~DGIpydrOne();
 
 private slots:
-    void on_throttleSlider_sliderMoved(int);
+    void on_throttleSlider_valueChanged(int);
 
     void on_buttonConnect_clicked();
     void on_buttonCancelConnect_clicked();
@@ -42,7 +41,6 @@ private slots:
 
     void on_checkLED_clicked();
 
-<<<<<<< HEAD
     void on_leftRightCalibrate_valueChanged(int value);
 
     void on_frontBackCalibrate_valueChanged(int value);
@@ -58,9 +56,6 @@ private slots:
     void on_buttonLessCompass_clicked();
 
     void on_buttonMoreCompass_clicked();
-=======
-    void on_degreesDial_valueChanged(int value);
->>>>>>> origin/master
 
 private:
     Ui::DGIpydrOne *ui;
@@ -76,16 +71,16 @@ private:
     vDegrees,
     vVerticalSpeed,
     vHorizontalSpeed,
-    vThrottleMotor1,
-    vThrottleMotor2,
-    vThrottleMotor3,
-    vThrottleMotor4,
     vPressure,
     vTemperature,
     vHumidity;
 
     QcGaugeWidget *mCompassGauge;
     QcNeedleItem *mCompassNeedle, *mCompassNeedle2;
+
+    QcGaugeWidget * mAttitudeGauge;
+    QcNeedleItem * mAttitudeNeedle;
+    QcAttitudeMeter *mAttMeter;
 
     remoteController *controller;
 
@@ -94,30 +89,12 @@ private:
 
     QGraphicsScene *sceneSonar;
 
-    QGraphicsTextItem *degreesText;
-
-    QGraphicsTextItem *verticalSpeedText;
-    QGraphicsTextItem *horizontalSpeedText;
-
-    QGraphicsTextItem *throttleMotor1Text;
-    QGraphicsTextItem *throttleMotor2Text;
-    QGraphicsTextItem *throttleMotor3Text;
-    QGraphicsTextItem *throttleMotor4Text;
-
     QGraphicsItem *leftSonar;
     QGraphicsItem *rightSonar;
     QGraphicsItem *frontSonar;
     QGraphicsItem *backSonar;
     QGraphicsItem *upSonar;
     QGraphicsItem *downSonar;
-
-    XInput input;
-    QTimer tmr;
-
-    bool f_haveJoystick, cancelJoystick = false;
-
-public slots:
-    void readJoystickState();
 };
 
 #endif // DGIPYDRONE_H

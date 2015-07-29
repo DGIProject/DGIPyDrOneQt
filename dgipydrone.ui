@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>958</width>
-    <height>465</height>
+    <height>460</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,9 +70,6 @@ QLineEdit {
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <property name="maximum">
-       <number>100</number>
-      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -82,8 +79,8 @@ QLineEdit {
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>141</width>
-        <height>51</height>
+        <width>41</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -120,7 +117,7 @@ QLineEdit {
         <x>10</x>
         <y>100</y>
         <width>256</width>
-        <height>256</height>
+        <height>271</height>
        </rect>
       </property>
      </widget>
@@ -128,9 +125,9 @@ QLineEdit {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
+        <y>60</y>
         <width>131</width>
-        <height>31</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
@@ -149,9 +146,9 @@ QLineEdit {
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>50</y>
+        <y>60</y>
         <width>111</width>
-        <height>31</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
@@ -169,8 +166,8 @@ QLineEdit {
      <widget class="QCheckBox" name="checkLED">
       <property name="geometry">
        <rect>
-        <x>650</x>
-        <y>20</y>
+        <x>10</x>
+        <y>10</y>
         <width>71</width>
         <height>20</height>
        </rect>
@@ -251,10 +248,10 @@ QLineEdit {
      <widget class="QGraphicsView" name="sonarView">
       <property name="geometry">
        <rect>
-        <x>550</x>
-        <y>100</y>
-        <width>271</width>
-        <height>271</height>
+        <x>480</x>
+        <y>0</y>
+        <width>131</width>
+        <height>121</height>
        </rect>
       </property>
       <property name="font">
@@ -266,7 +263,7 @@ QLineEdit {
      <widget class="QProgressBar" name="batteryLevelBar">
       <property name="geometry">
        <rect>
-        <x>700</x>
+        <x>730</x>
         <y>10</y>
         <width>21</width>
         <height>81</height>
@@ -282,12 +279,11 @@ QLineEdit {
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
-<<<<<<< HEAD
      <widget class="QRadioButton" name="manualMode">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>10</y>
+        <x>640</x>
+        <y>30</y>
         <width>82</width>
         <height>17</height>
        </rect>
@@ -302,27 +298,20 @@ QLineEdit {
      <widget class="QRadioButton" name="automaticMode">
       <property name="geometry">
        <rect>
-        <x>10</x>
-=======
-     <widget class="QCheckBox" name="checkGamePad">
-      <property name="geometry">
-       <rect>
-        <x>740</x>
->>>>>>> origin/master
+        <x>640</x>
         <y>10</y>
-        <width>70</width>
+        <width>82</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-<<<<<<< HEAD
        <string>Automatic</string>
       </property>
      </widget>
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>390</x>
+        <x>290</x>
         <y>10</y>
         <width>181</width>
         <height>81</height>
@@ -415,14 +404,14 @@ QLineEdit {
      <widget class="QPushButton" name="buttonCalibrateDrone">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>50</y>
-        <width>75</width>
+        <x>620</x>
+        <y>60</y>
+        <width>101</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
-       <string>Calibrate</string>
+       <string>Calibrate sensors</string>
       </property>
      </widget>
      <widget class="QWidget" name="verticalLayoutWidget">
@@ -462,12 +451,97 @@ QLineEdit {
        <string>-</string>
       </property>
      </widget>
-=======
-       <string>Gamepad </string>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>100</y>
+        <width>261</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout2"/>
+     </widget>
+     <widget class="QLabel" name="throttleLabel">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>10</y>
+        <width>61</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>100%</string>
       </property>
      </widget>
-     <zorder>degreesDial</zorder>
->>>>>>> origin/master
+     <widget class="QLabel" name="degreesLabel">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>270</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>359°</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="VSLabel">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>50</y>
+        <width>61</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>-- M/S</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="HSLabel">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>70</y>
+        <width>61</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>-- M/S</string>
+      </property>
+     </widget>
      <zorder>throttleSlider</zorder>
      <zorder>joystickView</zorder>
      <zorder>joystickXInformation</zorder>
@@ -482,7 +556,6 @@ QLineEdit {
      <zorder>spinBox_3</zorder>
      <zorder>sonarView</zorder>
      <zorder>batteryLevelBar</zorder>
-<<<<<<< HEAD
      <zorder>manualMode</zorder>
      <zorder>automaticMode</zorder>
      <zorder>groupBox</zorder>
@@ -490,9 +563,12 @@ QLineEdit {
      <zorder>verticalLayoutWidget</zorder>
      <zorder>buttonMoreCompass</zorder>
      <zorder>buttonLessCompass</zorder>
-=======
-     <zorder>checkGamePad</zorder>
->>>>>>> origin/master
+     <zorder>verticalLayoutWidget_2</zorder>
+     <zorder>throttleLabel</zorder>
+     <zorder>label_2</zorder>
+     <zorder>degreesLabel</zorder>
+     <zorder>VSLabel</zorder>
+     <zorder>HSLabel</zorder>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">

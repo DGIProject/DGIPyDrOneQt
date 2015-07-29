@@ -17,14 +17,13 @@ public:
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget) Q_DECL_OVERRIDE;
-    void setPosDirect(qreal x, qreal y);
-    QPointF _location;
 
 private:
     virtual void mouseMoveEvent ( QGraphicsSceneMouseEvent * event );
     virtual void mousePressEvent (QGraphicsSceneMouseEvent * event );
     virtual void mouseReleaseEvent (QGraphicsSceneMouseEvent * event );
 
+    QPointF _location;
     QPointF _dragStart;
 
     remoteController *controller;

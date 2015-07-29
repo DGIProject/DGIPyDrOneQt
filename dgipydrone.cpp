@@ -7,24 +7,11 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    f_haveJoystick = input.initInput(0);
-
-    if (f_haveJoystick)
-    {
-        ui->checkGamePad->setChecked(true);
-        tmr.setInterval(15);
-        connect(&tmr,SIGNAL(timeout()),this,SLOT(readJoystickState()));
-        tmr.start();
-    }
-
-
-
     ui->connectBeforeWidget->show();
 
     ui->buttonCancelConnect->setEnabled(false);
 
     mCompassGauge = new QcGaugeWidget;
-   // mCompassGauge->setGeometry(0,0,75,75);
     mCompassGauge->addBackground(99);
     QcBackgroundItem *bkg1 = mCompassGauge->addBackground(92);
     bkg1->clearrColors();
@@ -77,6 +64,24 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
     mCompassGauge->addBackground(7);
     mCompassGauge->addGlass(88);
     ui->verticalLayout->addWidget(mCompassGauge);
+
+    mAttitudeGauge = new QcGaugeWidget;
+    mAttitudeGauge->addBackground(99);
+    QcBackgroundItem *bkg = mAttitudeGauge->addBackground(92);
+    bkg->clearrColors();
+    bkg->addColor(0.1,Qt::black);
+    bkg->addColor(1.0,Qt::white);
+    mAttMeter = mAttitudeGauge->addAttitudeMeter(88);
+
+    mAttitudeNeedle = mAttitudeGauge->addNeedle(70);
+    mAttitudeNeedle->setMinDegree(0);
+    mAttitudeNeedle->setMaxDegree(180);
+    mAttitudeNeedle->setValueRange(0,180);
+    mAttitudeNeedle->setCurrentValue(90);
+    mAttitudeNeedle->setColor(Qt::white);
+    mAttitudeNeedle->setNeedle(QcNeedleItem::AttitudeMeterNeedle);
+    mAttitudeGauge->addGlass(80);
+    ui->verticalLayout2->addWidget(mAttitudeGauge);
 
     controller = new remoteController();
 
@@ -179,7 +184,7 @@ void DGIpydrOne::updateTextInformation(QString type, int value)
     qDebug() << type;
 
     QStringList list;
-    list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE1" << "THROTTLE2" << "THROTTLE3" << "THROTTLE4" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "USONAR" << "DSONAR" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY";
+    list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "USONAR" << "DSONAR" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY";
 
     switch (list.indexOf(type)) {
     case 0:
@@ -189,16 +194,7 @@ void DGIpydrOne::updateTextInformation(QString type, int value)
         ui->joystickYInformation->setText("Joystick Y : " + QString::number(value) + "°");
         break;
     case 2:
-        vThrottleMotor1 = value;
-        break;
-    case 3:
-        vThrottleMotor2 = value;
-        break;
-    case 4:
-        vThrottleMotor3 = value;
-        break;
-    case 5:
-        vThrottleMotor4 = value;
+        ui->throttleLabel->setText(QString::number(value) + "%");
         break;
     case 6:
         vLeftSonar = value;
@@ -220,6 +216,7 @@ void DGIpydrOne::updateTextInformation(QString type, int value)
         break;
     case 12:
         vDegrees = value;
+        ui->degreesLabel->setText(QString::number(value) + "°");
         mCompassNeedle->setCurrentValue(vDegrees);
         break;
     case 13:
@@ -248,7 +245,7 @@ void DGIpydrOne::updateTextInformation(QString type, int value)
     //drawDroneInformations();
 }
 
-void DGIpydrOne::on_throttleSlider_sliderMoved(int value)
+void DGIpydrOne::on_throttleSlider_valueChanged(int value)
 {
     controller->updatePositionTrottle(value);
 }
@@ -325,41 +322,6 @@ void DGIpydrOne::drawDroneInformations()
     backSonarText->setFont(fontTextItem);
     backSonarText->setPlainText(((vBackSonar == 0) ? "∞" : QString::number(vBackSonar)) + "cm");
 
-    degreesText = new QGraphicsTextItem();
-    degreesText->setPos(sceneSonar->width() / 2, 0);
-    degreesText->setFont(fontTextItem);
-    degreesText->setPlainText(QString::number(vDegrees) + "°");
-
-    verticalSpeedText = new QGraphicsTextItem();
-    verticalSpeedText->setPos(0, 0);
-    verticalSpeedText->setFont(fontTextItem);
-    verticalSpeedText->setPlainText("VS : " + QString::number(vVerticalSpeed) + "m/s");
-
-    horizontalSpeedText = new QGraphicsTextItem();
-    horizontalSpeedText->setPos(sceneSonar->width() - 70, 0);
-    horizontalSpeedText->setFont(fontTextItem);
-    horizontalSpeedText->setPlainText("HS : " + QString::number(vHorizontalSpeed) + "m/s");
-
-    throttleMotor1Text = new QGraphicsTextItem();
-    throttleMotor1Text->setPos(droneItem->pos().x() - 25, droneItem->pos().y());
-    throttleMotor1Text->setFont(fontTextItem);
-    throttleMotor1Text->setPlainText(QString::number(vThrottleMotor1) + "%");
-
-    throttleMotor2Text = new QGraphicsTextItem();
-    throttleMotor2Text->setPos(droneItem->pos().x() + droneImage.width(), droneItem->pos().y());
-    throttleMotor2Text->setFont(fontTextItem);
-    throttleMotor2Text->setPlainText(QString::number(vThrottleMotor2) + "%");
-
-    throttleMotor3Text = new QGraphicsTextItem();
-    throttleMotor3Text->setPos(droneItem->pos().x() - 25, droneItem->pos().y() + droneImage.height() - 20);
-    throttleMotor3Text->setFont(fontTextItem);
-    throttleMotor3Text->setPlainText(QString::number(vThrottleMotor3) + "%");
-
-    throttleMotor4Text = new QGraphicsTextItem();
-    throttleMotor4Text->setPos(droneItem->pos().x() + droneImage.width(), droneItem->pos().y() + droneImage.height() - 20);
-    throttleMotor4Text->setFont(fontTextItem);
-    throttleMotor4Text->setPlainText(QString::number(vThrottleMotor4) + "%");
-
     QGraphicsTextItem *pressureText = new QGraphicsTextItem();
     pressureText->setPos(0, 15);
     pressureText->setFont(fontTextItem);
@@ -369,72 +331,25 @@ void DGIpydrOne::drawDroneInformations()
     sceneSonar->addItem(rightSonarText);
     sceneSonar->addItem(frontSonarText);
     sceneSonar->addItem(backSonarText);
-    sceneSonar->addItem(degreesText);
-    sceneSonar->addItem(verticalSpeedText);
-    sceneSonar->addItem(horizontalSpeedText);
-    sceneSonar->addItem(throttleMotor1Text);
-    sceneSonar->addItem(throttleMotor2Text);
-    sceneSonar->addItem(throttleMotor3Text);
-    sceneSonar->addItem(throttleMotor4Text);
     sceneSonar->addItem(pressureText);
 
     ui->sonarView->setScene(sceneSonar);
 }
 
-<<<<<<< HEAD
 void DGIpydrOne::on_leftRightCalibrate_valueChanged(int value)
-=======
-void DGIpydrOne::on_degreesDial_valueChanged(int value)
 {
     qDebug() << value;
 
-    controller->updateOrientationDegrees(value);
+    controller->sendCalibrate(value, ui->frontBackCalibrate->value());
 }
 
-void DGIpydrOne::readJoystickState()
->>>>>>> origin/master
+void DGIpydrOne::on_frontBackCalibrate_valueChanged(int value)
 {
-    if (!ui->checkGamePad->isChecked()) return;
+    qDebug() << value;
 
-    if (!input.updateState()) return;
-
-    // Update main axes
-    /*  ui->sliderVertical->setValue((input.getVertical()+1.0f)*50.0f);
-    ui->sliderHorizontal->setValue((input.getHorizontal()+1.0f)*50.0f);
-    ui->dialRotation->setValue((input.getRotationZ()+1.0f)*50.0f);
-    ui->dialThrottle->setValue((input.getThrottle()+1.0f)*50.0f);*/
-
-
-    //qDebug() << input.getVertical() << " " << input.getHorizontal() << " " << input.getRotationZ() << input.getThrottle();
-    int newThrottleValue = (int)(((-input.getVertical()*100)+100)/2);
-    if (ui->throttleSlider->value() != newThrottleValue )
-    {
-        ui->throttleSlider->setValue(newThrottleValue);
-        controller->updatePositionTrottle(ui->throttleSlider->value());
-    }
-
-    int x = (int) (((input.getThrottle()*140)+140)/2), y= (int) (((input.getRotationZ()*140)+140)/2);
-    if (joystick->_location.x() != x || joystick->_location.y() != y )
-    {
-        joystick->setPosDirect( x , y );
-
-    }
-
-
-    // Output buttns' state
-    /* for (int r = 0; r < input.rows(); r++)
-    {
-      //  tblButtons.setText( r,0,QString("%1").arg(r) );
-
-        bool isPressed = input.isKeyPressed(r);
-        QString stateString("-");
-        if (isPressed) stateString = QString("Pressed");
-        qDebug() << r << "is pressend";
-      //  tblButtons.setText( r,1, stateString );
-    }*/
+    controller->sendCalibrate(ui->leftRightCalibrate->value(), value);
 }
 
-<<<<<<< HEAD
 void DGIpydrOne::on_checkCollision_clicked()
 {
     if(ui->checkCollision->isChecked()) {
@@ -476,5 +391,3 @@ void DGIpydrOne::on_buttonMoreCompass_clicked()
     mCompassNeedle2->setCurrentValue(mCompassNeedle2->currentValue()+1);
     controller->updateOrientationDegrees(mCompassNeedle2->currentValue());
 }
-=======
->>>>>>> origin/master
