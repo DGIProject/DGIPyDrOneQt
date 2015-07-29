@@ -70,6 +70,9 @@ QLineEdit {
       <property name="styleSheet">
        <string notr="true"/>
       </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -117,7 +120,7 @@ QLineEdit {
         <x>10</x>
         <y>100</y>
         <width>256</width>
-        <height>271</height>
+        <height>256</height>
        </rect>
       </property>
      </widget>
@@ -279,6 +282,7 @@ QLineEdit {
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
+<<<<<<< HEAD
      <widget class="QRadioButton" name="manualMode">
       <property name="geometry">
        <rect>
@@ -299,12 +303,19 @@ QLineEdit {
       <property name="geometry">
        <rect>
         <x>10</x>
+=======
+     <widget class="QCheckBox" name="checkGamePad">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+>>>>>>> origin/master
         <y>10</y>
-        <width>82</width>
+        <width>70</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
+<<<<<<< HEAD
        <string>Automatic</string>
       </property>
      </widget>
@@ -451,6 +462,12 @@ QLineEdit {
        <string>-</string>
       </property>
      </widget>
+=======
+       <string>Gamepad </string>
+      </property>
+     </widget>
+     <zorder>degreesDial</zorder>
+>>>>>>> origin/master
      <zorder>throttleSlider</zorder>
      <zorder>joystickView</zorder>
      <zorder>joystickXInformation</zorder>
@@ -465,6 +482,7 @@ QLineEdit {
      <zorder>spinBox_3</zorder>
      <zorder>sonarView</zorder>
      <zorder>batteryLevelBar</zorder>
+<<<<<<< HEAD
      <zorder>manualMode</zorder>
      <zorder>automaticMode</zorder>
      <zorder>groupBox</zorder>
@@ -472,6 +490,9 @@ QLineEdit {
      <zorder>verticalLayoutWidget</zorder>
      <zorder>buttonMoreCompass</zorder>
      <zorder>buttonLessCompass</zorder>
+=======
+     <zorder>checkGamePad</zorder>
+>>>>>>> origin/master
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">

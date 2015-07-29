@@ -12,24 +12,19 @@ remoteController::remoteController(QObject *parent) : QObject(parent)
     connect(timerServer, SIGNAL(timeout()), this, SLOT(actualizeConnectionTime()));
 
     timerData = new QTimer(this);
-    connect(timerData, SIGNAL(timeout()), this, SLOT(sendLastCommand()));
+    connect(timerData, SIGNAL(timeout()), this, SLOT(sendCommandMotor()));
 
     connectionStatut = 0;
     connectionTime = 0;
 
     sizeMessage = 0;
 
-    power = 0;
-
-    degrees = 0;
-
     posX = 0;
     posY = 0;
 
-    controlMode = 0;
+    power = 0;
 
-    leftRightCalibrate = 0;
-    frontBackCalibrate = 0;
+    degrees = 0;
 
     maxPower = 1;
     maxAngle = 1;
@@ -228,8 +223,6 @@ void remoteController::sendCommand(QString command)
 
         socket->write(QByteArray(QString("C " + command).toStdString().c_str()));
     }
-
-    lastCommand = command;
 }
 
 void remoteController::sendCommandMotor()
@@ -266,9 +259,7 @@ void remoteController::sendCommandMotor()
     motor4 = (motor4 < 0) ? 0 : motor4;
     */
 
-    //sendCommand("P " + QString::number(power) + "|" + QString::number(power) + "|" + QString::number(power) + "|" + QString::number(power) +  "|" + QString::number((int)degrees) + "|" + QString::number((int)posX) + "|" + QString::number((int)posY));
-
-    sendCommand("P " + QString::number(power) + "|" + QString::number((int)degrees) + "|" + QString::number((int)posX) + "|" + QString::number((int)posY));
+    sendCommand("P " + QString::number(power) + "|" + QString::number(power) + "|" + QString::number(power) + "|" + QString::number(power) +  "|" + QString::number((int)posX) + "|" + QString::number((int)posY) + "|" + QString::number((int)degrees));
 
     emit updateText("THROTTLE1", power);
     emit updateText("THROTTLE2", power);
@@ -276,47 +267,27 @@ void remoteController::sendCommandMotor()
     emit updateText("THROTTLE4", power);
 }
 
-void remoteController::sendCalibrate(int lrCalibrate, int fbCalibrate)
-{
-    leftRightCalibrate = lrCalibrate;
-    frontBackCalibrate = fbCalibrate;
-
-    sendCommand("C " + QString::number(leftRightCalibrate) + "|" + QString::number(frontBackCalibrate));
-}
-
 void remoteController::analyzeCommand(QString command)
 {
     qDebug() << "analyzeCommand";
 
-    QStringList commandSplit = command.split(" ");
+    QStringList dataMessage = command.split("|");
 
-    if(commandSplit[0] == "D") {
-        QStringList dataMessage = commandSplit[1].split("|");
+    //left sonar, right sonar, front sonar, back sonar, up sonar, down sonar, vertical speed, horizontal speed, degrees, battery, pressure, temperature, humidity
 
-        //left sonar, right sonar, front sonar, back sonar, up sonar, down sonar, vertical speed, horizontal speed, degrees, battery, pressure, temperature, humidity
-
-        emit updateText("LSONAR", dataMessage[0].toInt());
-        emit updateText("RSONAR", dataMessage[1].toInt());
-        emit updateText("FSONAR", dataMessage[2].toInt());
-        emit updateText("BSONAR", dataMessage[3].toInt());
-        emit updateText("USONAR", dataMessage[4].toInt());
-        emit updateText("DSONAR", dataMessage[5].toInt());
-        emit updateText("VSPEED", dataMessage[6].toInt());
-        emit updateText("HSPEED", dataMessage[7].toInt());
-        emit updateText("DEGREES", dataMessage[8].toInt());
-        emit updateText("BATTERY", dataMessage[9].toInt());
-        emit updateText("PRESSURE", dataMessage[10].toInt());
-        emit updateText("TEMPERATURE", dataMessage[11].toInt());
-        emit updateText("HUMIDITY", dataMessage[12].toInt());
-    }
-    else if(commandSplit[0] == "C") {
-        qDebug() << "calibrate receive " + commandSplit[1];
-    }
-}
-
-void remoteController::sendLastCommand()
-{
-    sendCommand(lastCommand);
+    emit updateText("LSONAR", dataMessage[0].toInt());
+    emit updateText("RSONAR", dataMessage[1].toInt());
+    emit updateText("FSONAR", dataMessage[2].toInt());
+    emit updateText("BSONAR", dataMessage[3].toInt());
+    emit updateText("USONAR", dataMessage[4].toInt());
+    emit updateText("DSONAR", dataMessage[5].toInt());
+    emit updateText("VSPEED", dataMessage[6].toInt());
+    emit updateText("HSPEED", dataMessage[7].toInt());
+    emit updateText("DEGREES", dataMessage[8].toInt());
+    emit updateText("BATTERY", dataMessage[9].toInt());
+    emit updateText("PRESSURE", dataMessage[10].toInt());
+    emit updateText("TEMPERATURE", dataMessage[11].toInt());
+    emit updateText("HUMIDITY", dataMessage[12].toInt());
 }
 
 void remoteController::updateValues(float nMaxPower, float nMaxAngle, int nSensibility)

@@ -33,6 +33,13 @@ void joystickRect::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
     controller->updatePositionJoystick(_location);
 }
 
+void joystickRect::setPosDirect(qreal x, qreal y)
+{
+    this->setPos(x,y);
+    _location = QPointF(x,y);
+    controller->updatePositionJoystick(_location);
+}
+
 
 // for supporting moving the box across the scene
 void joystickRect::mousePressEvent ( QGraphicsSceneMouseEvent * event )
