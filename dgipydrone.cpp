@@ -195,12 +195,30 @@ void DGIpydrOne::readJoystickState()
 
 
     //qDebug() << input.getVertical() << " " << input.getHorizontal() << " " << input.getRotationZ() << input.getThrottle();
-    int newThrottleValue = (int)(((-input.getVertical()*100)+100)/2);
+
+
+
+   // int newThrottleValue = (int)(((-input.getVertical()*10)+10)/2);
+
+    int newThrottleValue = (int)(ui->throttleSlider->value()+((((int)input.getVertical()*10000==0)?0:(-input.getVertical()))*2));
+
     if (ui->throttleSlider->value() != newThrottleValue )
     {
+
+        if (newThrottleValue<=0)
+        {
+            newThrottleValue = 0;
+        }
+        else if (newThrottleValue>=100)
+        {
+            newThrottleValue = 100;
+        }
+
         ui->throttleSlider->setValue(newThrottleValue);
+
         controller->updatePositionTrottle(ui->throttleSlider->value());
     }
+
 
     int x = (int) (((input.getThrottle()*140)+140)/2), y= (int) (((input.getRotationZ()*140)+140)/2);
     if (joystick->_location.x() != x || joystick->_location.y() != y )
@@ -209,7 +227,7 @@ void DGIpydrOne::readJoystickState()
 
     }
 
-    int temporyValue = mCompassNeedle2->currentValue()+(int)(input.getHorizontal()*10);
+    int temporyValue = mCompassNeedle2->currentValue()+(int)(input.getHorizontal()*5);
     if ( mCompassNeedle2->currentValue() != temporyValue)
     {
         if (temporyValue<0)
@@ -275,10 +293,10 @@ void DGIpydrOne::updateConnectionTime(int time)
 
 void DGIpydrOne::updateTextInformation(QString type, int value)
 {
-    qDebug() << type;
+    //qDebug() << type;
 
     QStringList list;
-    list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "USONAR" << "DSONAR" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY";
+    list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "PITCH" << "ROLL" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY";
 
     switch (list.indexOf(type)) {
     case 0:
@@ -290,45 +308,51 @@ void DGIpydrOne::updateTextInformation(QString type, int value)
     case 2:
         ui->throttleLabel->setText(QString::number(value) + "%");
         break;
-    case 6:
+    case 3:
         vLeftSonar = value;
         break;
-    case 7:
+    case 4:
         vRightSonar = value;
         break;
-    case 8:
+    case 5:
         vFrontSonar = value;
         break;
-    case 9:
+    case 6:
         vBackSonar = value;
         break;
+    case 7:
+        //vUpSonar = value;
+        qDebug() << value;
+        mAttMeter->setCurrentPitch(value);
+        break;
+    case 8:
+        //vDownSonar = value;
+        mAttitudeNeedle->setCurrentValue(90-value);
+        mAttMeter->setCurrentRoll(value);
+        break;
+    case 9:
+        vDegrees = value;
+        //ui->degreesLabel->setText(QString::number(value) + "°");
+        mCompassNeedle->setCurrentValue(vDegrees + 90);
+        break;
     case 10:
-        vUpSonar = value;
+        vVerticalSpeed = value;
+        ui->VSLabel->setText(QString::number(value));
         break;
     case 11:
-        vDownSonar = value;
+        vHorizontalSpeed = value;
+        ui->HSLabel->setText(QString::number(value));
         break;
     case 12:
-        vDegrees = value;
-        ui->degreesLabel->setText(QString::number(value) + "°");
-        mCompassNeedle->setCurrentValue(vDegrees);
-        break;
-    case 13:
-        vVerticalSpeed = value;
-        break;
-    case 14:
-        vHorizontalSpeed = value;
-        break;
-    case 15:
         ui->batteryLevelBar->setValue((int)(((float)value / 12) * 100));
         break;
-    case 16:
-        vHumidity = value;
+    case 13:
+        vPressure = value;
         break;
-    case 17:
+    case 14:
         vTemperature = value;
         break;
-    case 18:
+    case 15:
         vHumidity = value;
         break;
     default:

@@ -283,7 +283,7 @@ void remoteController::sendCalibrate(int lrCalibrate, int fbCalibrate)
 
 void remoteController::analyzeCommand(QString command)
 {
-    qDebug() << "analyzeCommand";
+    //qDebug() << "analyzeCommand";
 
     QStringList commandSplit = command.split(" ");
 
@@ -296,10 +296,10 @@ void remoteController::analyzeCommand(QString command)
         emit updateText("RSONAR", dataMessage[1].toInt());
         emit updateText("FSONAR", dataMessage[2].toInt());
         emit updateText("BSONAR", dataMessage[3].toInt());
-        emit updateText("USONAR", dataMessage[4].toInt());
-        emit updateText("DSONAR", dataMessage[5].toInt());
-        emit updateText("VSPEED", dataMessage[6].toInt());
-        emit updateText("HSPEED", dataMessage[7].toInt());
+        emit updateText("ROLL", (int)dataMessage[4].toFloat());
+        emit updateText("PITCH", (int)dataMessage[5].toFloat());
+        emit updateText("VSPEED", (int)dataMessage[6].toFloat());
+        emit updateText("HSPEED", (int)dataMessage[7].toFloat());
         emit updateText("DEGREES", dataMessage[8].toInt());
         emit updateText("BATTERY", dataMessage[9].toInt());
         emit updateText("PRESSURE", dataMessage[10].toInt());
