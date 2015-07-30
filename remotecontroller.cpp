@@ -88,7 +88,7 @@ void remoteController::updatePositionTrottle(int value)
 
 void remoteController::updateOrientationDegrees(int value)
 {
-    degrees = ((float)value / 100) * 360;
+    degrees = value;
 
     sendCommandMotor();
 
@@ -224,9 +224,9 @@ void remoteController::sendCommand(QString command)
 
         lastRNumber = rNumber;
 
-        //socket->write(QByteArray(QString("C " + command + "|" + QString::number(rNumber)).toStdString().c_str()));
-
-        socket->write(QByteArray(QString("C " + command).toStdString().c_str()));
+        socket->write(QByteArray(QString("C " + command + " " + QString::number(rNumber)).toStdString().c_str()));
+        
+        //socket->write(QByteArray(QString("C " + command).toStdString().c_str()));
     }
 
     lastCommand = command;

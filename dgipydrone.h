@@ -4,6 +4,7 @@
 #include "remotecontroller.h"
 #include "profileeditor.h"
 #include "joystickrect.h"
+#include "xinputGamepad.h"
 #include <QMainWindow>
 #include <QtNetwork/QTcpSocket>
 #include <QScrollBar>
@@ -95,6 +96,15 @@ private:
     QGraphicsItem *backSonar;
     QGraphicsItem *upSonar;
     QGraphicsItem *downSonar;
+
+    XInput input;
+    QTimer tmr;
+
+    bool f_haveJoystick, cancelJoystick = false;
+
+
+public slots:
+       void readJoystickState();
 };
 
 #endif // DGIPYDRONE_H

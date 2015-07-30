@@ -11,19 +11,23 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = DGIpydrOneQt
 TEMPLATE = app
 
+LIBS = -lsfml-window
 
 SOURCES += main.cpp\
         dgipydrone.cpp \
     joystickrect.cpp \
     remotecontroller.cpp \
     profileeditor.cpp \
-    qcgaugewidget.cpp
+    qcgaugewidget.cpp \
+    xinputGamepad.cpp
 
 HEADERS  += dgipydrone.h \
     joystickrect.h \
     remotecontroller.h \
     profileeditor.h \
-    qcgaugewidget.h
+    qcgaugewidget.h \
+    xinputGamepad.h \
+    xqTblMgr.h
 
 FORMS    += dgipydrone.ui
 

@@ -7,6 +7,16 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    f_haveJoystick = input.initInput(0);
+
+    if (f_haveJoystick)
+    {
+       ui->checkGamepad->setChecked(false);
+       tmr.setInterval(15);
+       connect(&tmr,SIGNAL(timeout()),this,SLOT(readJoystickState()));
+       tmr.start();
+    }
+
     ui->connectBeforeWidget->show();
 
     ui->buttonCancelConnect->setEnabled(false);
@@ -25,28 +35,28 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 
     QcLabelItem *w = mCompassGauge->addLabel(80);
     w->setText("W");
-    w->setAngle(270);
+    w->setAngle(0);
     w->setColor(Qt::white);
 
     QcLabelItem *n = mCompassGauge->addLabel(80);
     n->setText("N");
-    n->setAngle(0);
+    n->setAngle(90);
     n->setColor(Qt::white);
 
     QcLabelItem *e = mCompassGauge->addLabel(80);
     e->setText("E");
-    e->setAngle(90);
+    e->setAngle(180);
     e->setColor(Qt::white);
 
     QcLabelItem *s = mCompassGauge->addLabel(80);
     s->setText("S");
-    s->setAngle(180);
+    s->setAngle(270);
     s->setColor(Qt::white);
 
     QcDegreesItem *deg = mCompassGauge->addDegrees(70);
     deg->setStep(5);
-    deg->setMaxDegree(270);
-    deg->setMinDegree(-75);
+    deg->setMaxDegree(359);
+    deg->setMinDegree(0);
     deg->setColor(Qt::white);
 
     mCompassNeedle2 = mCompassGauge->addNeedle(60);
@@ -54,13 +64,15 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
     mCompassNeedle2->setValueRange(0,360);
     mCompassNeedle2->setMaxDegree(360);
     mCompassNeedle2->setMinDegree(0);
-    mCompassNeedle2->setCurrentValue(150);
+    mCompassNeedle2->setCurrentValue(90);
+
 
     mCompassNeedle = mCompassGauge->addNeedle(60);
     mCompassNeedle->setNeedle(QcNeedleItem::CompassNeedle);
     mCompassNeedle->setValueRange(0,360);
     mCompassNeedle->setMaxDegree(360);
     mCompassNeedle->setMinDegree(0);
+    mCompassNeedle->setCurrentValue(90);
     mCompassGauge->addBackground(7);
     mCompassGauge->addGlass(88);
     ui->verticalLayout->addWidget(mCompassGauge);
@@ -139,6 +151,88 @@ void DGIpydrOne::on_buttonSendCommand_clicked()
         ui->commandText->clear();
         ui->commandText->setFocus();
     }
+}
+
+void DGIpydrOne::readJoystickState()
+{
+    if (!input.updateState()) return;
+
+    // Output buttns' state
+     for (int r = 0; r < 24; r++)
+    {
+        bool isPressed = input.isKeyPressed(r);
+        if (isPressed)
+        {
+            qDebug() << r << "is pressend";
+
+            switch (r) {
+            case 0:
+                ui->checkGamepad->setChecked((ui->checkGamepad->isChecked())?false:true);
+                break;
+            case 1 :
+                ui->throttleSlider->setValue(0);
+                controller->updatePositionTrottle(0);
+                ui->checkGamepad->setChecked(false);
+                break;
+            case 3 :
+                on_buttonCalibrateDrone_clicked();
+                break;
+            default:
+                break;
+            }
+        }
+      //  tblButtons.setText( r,1, stateString );
+    }
+
+    if (!ui->checkGamepad->isChecked()) return;
+
+
+    // Update main axes
+    /*  ui->sliderVertical->setValue((input.getVertical()+1.0f)*50.0f);
+    ui->sliderHorizontal->setValue((input.getHorizontal()+1.0f)*50.0f);
+    ui->dialRotation->setValue((input.getRotationZ()+1.0f)*50.0f);
+    ui->dialThrottle->setValue((input.getThrottle()+1.0f)*50.0f);*/
+
+
+    //qDebug() << input.getVertical() << " " << input.getHorizontal() << " " << input.getRotationZ() << input.getThrottle();
+    int newThrottleValue = (int)(((-input.getVertical()*100)+100)/2);
+    if (ui->throttleSlider->value() != newThrottleValue )
+    {
+        ui->throttleSlider->setValue(newThrottleValue);
+        controller->updatePositionTrottle(ui->throttleSlider->value());
+    }
+
+    int x = (int) (((input.getThrottle()*140)+140)/2), y= (int) (((input.getRotationZ()*140)+140)/2);
+    if (joystick->_location.x() != x || joystick->_location.y() != y )
+    {
+        joystick->setPosDirect( x , y );
+
+    }
+
+    int temporyValue = mCompassNeedle2->currentValue()+(int)(input.getHorizontal()*10);
+    if ( mCompassNeedle2->currentValue() != temporyValue)
+    {
+        if (temporyValue<0)
+        {
+            temporyValue=359+temporyValue;
+        }
+        else if (temporyValue>359)
+        {
+            temporyValue = temporyValue-359;
+        }
+
+        int degrees = temporyValue-90;
+        if (degrees<0)
+        {
+             degrees = 359+temporyValue-90;
+        }
+
+
+        ui->degreesLabel->setText(QString::number(degrees)+"°");
+        mCompassNeedle2->setCurrentValue(temporyValue);
+        controller->updateOrientationDegrees(degrees);
+    }
+
 }
 
 void DGIpydrOne::statutConnection(QString statut)
@@ -381,13 +475,48 @@ void DGIpydrOne::on_buttonCalibrateDrone_clicked()
 
 void DGIpydrOne::on_buttonLessCompass_clicked()
 {
-    mCompassNeedle2->setCurrentValue(mCompassNeedle2->currentValue()-1);
-    controller->updateOrientationDegrees(mCompassNeedle2->currentValue());
-    qDebug() << mCompassNeedle2->position();
+    int temporyValue = mCompassNeedle2->currentValue()-1;
+    if (temporyValue<0)
+    {
+        temporyValue=359+temporyValue;
+    }
+    else if (temporyValue>359)
+    {
+        temporyValue = temporyValue-359;
+    }
+
+    int degrees = temporyValue-90;
+    if (degrees<0)
+    {
+         degrees = 359+temporyValue-90;
+    }
+
+
+    ui->degreesLabel->setText(QString::number(degrees)+"°");
+    mCompassNeedle2->setCurrentValue(temporyValue);
+    controller->updateOrientationDegrees(degrees);
 }
 
 void DGIpydrOne::on_buttonMoreCompass_clicked()
 {
-    mCompassNeedle2->setCurrentValue(mCompassNeedle2->currentValue()+1);
-    controller->updateOrientationDegrees(mCompassNeedle2->currentValue());
+    int temporyValue = mCompassNeedle2->currentValue()+1;
+    if (temporyValue<0)
+    {
+        temporyValue=359+temporyValue;
+    }
+    else if (temporyValue>359)
+    {
+        temporyValue = temporyValue-359;
+    }
+
+    int degrees = temporyValue-90;
+    if (degrees<0)
+    {
+         degrees = 359+temporyValue-90;
+    }
+
+
+    ui->degreesLabel->setText(QString::number(degrees)+"°");
+    mCompassNeedle2->setCurrentValue(temporyValue);
+    controller->updateOrientationDegrees(degrees);
 }

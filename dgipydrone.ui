@@ -125,7 +125,7 @@ QLineEdit {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>60</y>
+        <y>70</y>
         <width>131</width>
         <height>21</height>
        </rect>
@@ -146,7 +146,7 @@ QLineEdit {
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>60</y>
+        <y>70</y>
         <width>111</width>
         <height>21</height>
        </rect>
@@ -542,6 +542,19 @@ QLineEdit {
        <string>-- M/S</string>
       </property>
      </widget>
+     <widget class="QCheckBox" name="checkGamepad">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>70</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Gamepad</string>
+      </property>
+     </widget>
      <zorder>throttleSlider</zorder>
      <zorder>joystickView</zorder>
      <zorder>joystickXInformation</zorder>
@@ -565,10 +578,10 @@ QLineEdit {
      <zorder>buttonLessCompass</zorder>
      <zorder>verticalLayoutWidget_2</zorder>
      <zorder>throttleLabel</zorder>
-     <zorder>label_2</zorder>
      <zorder>degreesLabel</zorder>
      <zorder>VSLabel</zorder>
      <zorder>HSLabel</zorder>
+     <zorder>checkGamepad</zorder>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -810,7 +823,13 @@ QPushButton:pressed {
     <property name="title">
      <string>Profile</string>
     </property>
-    <addaction name="actionOptions"/>
+    <widget class="QMenu" name="menuOptions">
+     <property name="title">
+      <string>Options</string>
+     </property>
+     <addaction name="actionG_n_rale"/>
+    </widget>
+    <addaction name="menuOptions"/>
     <addaction name="separator"/>
     <addaction name="actionLoad"/>
     <addaction name="separator"/>
@@ -871,9 +890,14 @@ QPushButton:pressed {
     <string>Disconnect</string>
    </property>
   </action>
-  <action name="actionOptions">
+  <action name="actionG_n_rale">
    <property name="text">
-    <string>Options</string>
+    <string>générales</string>
+   </property>
+  </action>
+  <action name="actionAssociation_touche">
+   <property name="text">
+    <string>Association touche</string>
    </property>
   </action>
  </widget>
