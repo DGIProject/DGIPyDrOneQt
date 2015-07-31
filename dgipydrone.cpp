@@ -100,9 +100,9 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
     connect(controller, SIGNAL(updateStatutConnection(QString)), this, SLOT(statutConnection(QString)));
     connect(controller, SIGNAL(updateConsole(QString)), this, SLOT(updateConsole(QString)));
     connect(controller, SIGNAL(updateConnectionTime(int)), this, SLOT(updateConnectionTime(int)));
-    connect(controller, SIGNAL(updateText(QString, int)), this, SLOT(updateTextInformation(QString, int)));
+    connect(controller, SIGNAL(updateInformations(QString,int)), this, SLOT(updateInformationsInterface(QString, int)));
 
-    ui->joystickView->setGeometry(10, 80, 250, 250);
+    ui->joystickView->setGeometry(10, 110, 250, 250);
 
     sceneJoystick = new QGraphicsScene();
     sceneJoystick->setSceneRect(0,0, ui->joystickView->width() - 10, ui->joystickView->height() - 10);
@@ -112,7 +112,7 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 
     sceneJoystick->addItem(joystick);
 
-    vLeftSonar = vRightSonar = vFrontSonar = vBackSonar = vUpSonar = vBackSonar = vDegrees = vVerticalSpeed = vHorizontalSpeed = vPressure = vTemperature = vHumidity = 0;
+    vLeftSonar = vRightSonar = vFrontSonar = vBackSonar = vUpSonar = vBackSonar = vDegrees = vVerticalSpeed = vHorizontalSpeed = vPressure = 0;
 
     drawDroneInformations();
 }
@@ -291,12 +291,12 @@ void DGIpydrOne::updateConnectionTime(int time)
     ui->connectionTime->setText(QString::number(time) + "s");
 }
 
-void DGIpydrOne::updateTextInformation(QString type, int value)
+void DGIpydrOne::updateInformationsInterface(QString type, int value)
 {
-    //qDebug() << type;
+    qDebug() << type;
 
     QStringList list;
-    list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "PITCH" << "ROLL" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY";
+    list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "PITCH" << "ROLL" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY" << "MODE" << "USESONARS" << "ISSLEEPING" << "ISSTABILIZING" << "FLASHINGLED";
 
     switch (list.indexOf(type)) {
     case 0:
@@ -348,13 +348,29 @@ void DGIpydrOne::updateTextInformation(QString type, int value)
         break;
     case 13:
         vPressure = value;
+        ui->pressureLabel->setText(QString::number(value) + "Pa");
         break;
     case 14:
-        vTemperature = value;
+        ui->temperatureLabel->setText(QString::number(value) + "°C");
         break;
     case 15:
-        vHumidity = value;
+        ui->humidityLabel->setText(QString::number(value) + "%");
         break;
+    case 16:
+        ui->automaticMode->setChecked((value == 1) ? true : false);
+        ui->manualMode->setChecked((value == 1) ? false : true);
+        break;
+    case 17:
+        ui->checkCollision->setChecked((value == 1) ? true : false);
+        break;
+    case 18:
+        ui->checkLanding->setChecked((value == 1) ? true : false);
+        break;
+    case 19:
+        //stabilizing
+        break;
+    case 20:
+        ui->checkLED->setChecked((value == 1) ? true : false);
     default:
         qDebug() << "error type";
         break;
@@ -543,4 +559,9 @@ void DGIpydrOne::on_buttonMoreCompass_clicked()
     ui->degreesLabel->setText(QString::number(degrees)+"°");
     mCompassNeedle2->setCurrentValue(temporyValue);
     controller->updateOrientationDegrees(degrees);
+}
+
+void DGIpydrOne::on_buttonTest_clicked()
+{
+    controller->loadInformations();
 }

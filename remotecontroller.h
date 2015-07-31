@@ -27,6 +27,7 @@ public:
     void sendCommand(QString);
 
     void updateValues(float, float, int);
+    void loadInformations();
 
     void sendCalibrate(int, int);
 
@@ -84,7 +85,7 @@ signals:
     void updateStatutConnection(QString);
     void updateConsole(QString);
     void updateConnectionTime(int);
-    void updateText(QString, int);
+    void updateInformations(QString, int);
 };
 
 #endif // REMOTECONTROLLER_H

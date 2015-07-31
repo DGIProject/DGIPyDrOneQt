@@ -36,7 +36,7 @@ private slots:
     void statutConnection(QString);
     void updateConsole(QString);
     void updateConnectionTime(int);
-    void updateTextInformation(QString, int);
+    void updateInformationsInterface(QString, int);
 
     void on_buttonSaveProfile_clicked();
 
@@ -58,6 +58,8 @@ private slots:
 
     void on_buttonMoreCompass_clicked();
 
+    void on_buttonTest_clicked();
+
 private:
     Ui::DGIpydrOne *ui;
 
@@ -72,9 +74,7 @@ private:
     vDegrees,
     vVerticalSpeed,
     vHorizontalSpeed,
-    vPressure,
-    vTemperature,
-    vHumidity;
+    vPressure;
 
     QcGaugeWidget *mCompassGauge;
     QcNeedleItem *mCompassNeedle, *mCompassNeedle2;
