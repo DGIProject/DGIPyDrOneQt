@@ -26,8 +26,7 @@ HEADERS  += dgipydrone.h \
     remotecontroller.h \
     profileeditor.h \
     qcgaugewidget.h \
-    xinputGamepad.h \
-    xqTblMgr.h
+    xinputGamepad.h
 
 FORMS    += dgipydrone.ui
 

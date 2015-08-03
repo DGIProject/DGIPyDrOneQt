@@ -196,8 +196,8 @@ void DGIpydrOne::readJoystickState()
 
     //qDebug() << input.getVertical() << " " << input.getHorizontal() << " " << input.getRotationZ() << input.getThrottle();
 
-
-
+    ui->leftRightCalibrate->setValue(ui->leftRightCalibrate->value()+roundf(input.getRawAxis(6)));
+    ui->frontBackCalibrate->setValue(ui->frontBackCalibrate->value()+roundf(input.getRawAxis(7)));
    // int newThrottleValue = (int)(((-input.getVertical()*10)+10)/2);
 
     int newThrottleValue = (int)(ui->throttleSlider->value()+((((int)input.getVertical()*10000==0)?0:(-input.getVertical()))*2));
@@ -248,7 +248,7 @@ void DGIpydrOne::readJoystickState()
 
         ui->degreesLabel->setText(QString::number(degrees)+"°");
         mCompassNeedle2->setCurrentValue(temporyValue);
-        controller->updateOrientationDegrees(degrees);
+        //controller->updateOrientationDegrees(degrees);
     }
 
 }
