@@ -47,9 +47,6 @@ remoteController::~remoteController()
 
 void remoteController::updatePositionJoystick(int xJoystick, int yJoystick)
 {
-    //qDebug() << "update position";
-    //qDebug() << posJoystick;
-
     float tempPosX = xJoystick;
     float tempPosY = yJoystick;
 
@@ -68,12 +65,6 @@ void remoteController::updatePositionJoystick(int xJoystick, int yJoystick)
     {
         tempPosY = (int)(((tempPosY-70)/70)*45);
     }
-
-    qDebug() << tempPosX;
-    qDebug() << tempPosY;
-
-    //qDebug() << posX;
-    //qDebug() << posY;
 
     if(tempPosX != posX || tempPosY != posY) {
         posX = tempPosX;
@@ -261,6 +252,8 @@ bool remoteController::startSession()
 {
     if(connectionStatut == 2) {
         playingSession = true;
+
+        loadInformations();
 
         return true;
     }

@@ -82,8 +82,8 @@ QLineEdit {
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>41</width>
-        <height>21</height>
+        <width>961</width>
+        <height>401</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -94,9 +94,9 @@ QLineEdit {
       <widget class="QLabel" name="label_4">
        <property name="geometry">
         <rect>
-         <x>150</x>
-         <y>140</y>
-         <width>291</width>
+         <x>300</x>
+         <y>150</y>
+         <width>311</width>
          <height>51</height>
         </rect>
        </property>
@@ -110,7 +110,7 @@ QLineEdit {
 }</string>
        </property>
        <property name="text">
-        <string>Information : please connect to the drone.</string>
+        <string>Information : please connect your command.</string>
        </property>
       </widget>
      </widget>
@@ -482,7 +482,7 @@ QLineEdit {
        </font>
       </property>
       <property name="text">
-       <string>100%</string>
+       <string>0%</string>
       </property>
      </widget>
      <widget class="QLabel" name="degreesLabel">
@@ -615,27 +615,24 @@ QLineEdit {
        <string>--%</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="buttonTest">
+     <widget class="QPushButton" name="buttonStartSession">
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>90</x>
         <y>60</y>
         <width>75</width>
         <height>23</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Test</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="buttonStartSession">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>0</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background-color: rgb(11, 190, 68);
+	color: rgb(0, 0, 0);
+}
+
+QPushButton:checked  {
+	background-color: rgb(255, 74, 77);
+}</string>
       </property>
       <property name="text">
        <string>Start session</string>
@@ -651,7 +648,6 @@ QLineEdit {
      <zorder>joystickView</zorder>
      <zorder>joystickXInformation</zorder>
      <zorder>joystickYInformation</zorder>
-     <zorder>connectBeforeWidget</zorder>
      <zorder>checkLED</zorder>
      <zorder>checkCollision</zorder>
      <zorder>checkLanding</zorder>
@@ -677,8 +673,8 @@ QLineEdit {
      <zorder>pressureLabel</zorder>
      <zorder>temperatureLabel</zorder>
      <zorder>humidityLabel</zorder>
-     <zorder>buttonTest</zorder>
      <zorder>buttonStartSession</zorder>
+     <zorder>connectBeforeWidget</zorder>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">

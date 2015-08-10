@@ -58,8 +58,6 @@ private slots:
 
     void on_buttonMoreCompass_clicked();
 
-    void on_buttonTest_clicked();
-
     void on_buttonStartSession_clicked();
 
 private:

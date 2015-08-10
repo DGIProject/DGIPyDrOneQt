@@ -511,24 +511,24 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
         break;
     case 10:
         vVerticalSpeed = value;
-        ui->VSLabel->setText(QString::number(value));
+        ui->VSLabel->setText(QString::number(value) + " M/S");
         break;
     case 11:
         vHorizontalSpeed = value;
-        ui->HSLabel->setText(QString::number(value));
+        ui->HSLabel->setText(QString::number(value) +  " M/S");
         break;
     case 12:
         ui->batteryLevelBar->setValue((int)(((float)value / 12) * 100));
         break;
     case 13:
         vPressure = value;
-        ui->pressureLabel->setText(QString::number(value) + "Pa");
+        ui->pressureLabel->setText(QString::number(value) + " Pa");
         break;
     case 14:
-        ui->temperatureLabel->setText(QString::number(value) + "°C");
+        ui->temperatureLabel->setText(QString::number(value) + " °C");
         break;
     case 15:
-        ui->humidityLabel->setText(QString::number(value) + "%");
+        ui->humidityLabel->setText(QString::number(value) + " %");
         break;
     case 16:
         ui->automaticMode->setChecked((value == 1) ? true : false);
@@ -729,11 +729,6 @@ void DGIpydrOne::on_buttonMoreCompass_clicked()
     ui->degreesLabel->setText(QString::number(degrees)+"°");
     mCompassNeedle2->setCurrentValue(temporyValue);
     controller->updateOrientationDegrees(degrees);
-}
-
-void DGIpydrOne::on_buttonTest_clicked()
-{
-    controller->loadInformations();
 }
 
 void DGIpydrOne::on_buttonStartSession_clicked()
