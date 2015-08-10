@@ -135,7 +135,7 @@ void remoteController::connected()
 {
     connectionStatut = 2;
 
-    timerData->start(500);
+    timerData->start(250);
 
     emit updateStatutConnection("CONNECT");
 }

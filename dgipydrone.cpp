@@ -750,3 +750,31 @@ void DGIpydrOne::on_buttonStartSession_clicked()
         }
     }
 }
+
+void DGIpydrOne::on_buttonPing_clicked()
+{
+    ui->listIp->clear();
+
+    QStringList pieceIp = ui->serverIp->text().split(".");
+    QString searchIp = pieceIp[0] + "." + pieceIp[1] + "." + pieceIp[2] + ".";
+
+    network = new AnalyzeNetwork(searchIp);
+    connect(network, SIGNAL(answerIp(QString)), this, SLOT(connectedDevices(QString)));
+
+    network->start();
+}
+
+void DGIpydrOne::on_buttonStopPing_clicked() {
+    network->terminate();
+}
+
+void DGIpydrOne::connectedDevices(QString ip) {
+    ui->listIp->addItem(ip);
+}
+
+void DGIpydrOne::on_listIp_doubleClicked(const QModelIndex &index)
+{
+    qDebug() << ui->listIp->currentItem()->text();
+
+    ui->serverIp->setText(ui->listIp->currentItem()->text());
+}

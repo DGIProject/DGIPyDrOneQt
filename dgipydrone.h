@@ -1,6 +1,7 @@
 #ifndef DGIPYDRONE_H
 #define DGIPYDRONE_H
 
+#include "analyzenetwork.h"
 #include "remotecontroller.h"
 #include "profileeditor.h"
 #include "joystickrect.h"
@@ -13,6 +14,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include <QProcess>
 
 namespace Ui {
 class DGIpydrOne;
@@ -60,10 +62,18 @@ private slots:
 
     void on_buttonStartSession_clicked();
 
+    void on_buttonPing_clicked();
+
+    void on_buttonStopPing_clicked();
+
+    void on_listIp_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::DGIpydrOne *ui;
 
     void drawDroneInformations();
+
+    AnalyzeNetwork *network;
 
     int vLeftSonar,
     vRightSonar,
@@ -108,6 +118,8 @@ private:
 
 public slots:
        void readJoystickState();
+
+       void connectedDevices(QString);
 };
 
 #endif // DGIPYDRONE_H

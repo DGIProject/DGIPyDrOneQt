@@ -19,14 +19,16 @@ SOURCES += main.cpp\
     remotecontroller.cpp \
     profileeditor.cpp \
     qcgaugewidget.cpp \
-    xinputGamepad.cpp
+    xinputGamepad.cpp \
+    analyzenetwork.cpp
 
 HEADERS  += dgipydrone.h \
     joystickrect.h \
     remotecontroller.h \
     profileeditor.h \
     qcgaugewidget.h \
-    xinputGamepad.h
+    xinputGamepad.h \
+    analyzenetwork.h
 
 FORMS    += dgipydrone.ui
 
