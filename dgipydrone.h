@@ -40,13 +40,13 @@ private slots:
 
     void on_buttonSaveProfile_clicked();
 
-    void on_checkLED_clicked();
+    void on_checkLED_stateChanged();
 
     void on_leftRightCalibrate_valueChanged(int value);
 
     void on_frontBackCalibrate_valueChanged(int value);
 
-    void on_checkCollision_clicked();
+    void on_checkCollision_stateChanged();
 
     void on_manualMode_clicked();
 
@@ -59,6 +59,8 @@ private slots:
     void on_buttonMoreCompass_clicked();
 
     void on_buttonTest_clicked();
+
+    void on_buttonStartSession_clicked();
 
 private:
     Ui::DGIpydrOne *ui;
@@ -100,7 +102,10 @@ private:
     XInput input;
     QTimer tmr;
 
-    bool f_haveJoystick, cancelJoystick = false;
+    bool useJoystick;
+    bool calibrateJoystick;
+
+    bool pressedButtons[5] = {false, false, false, false};
 
 
 public slots:

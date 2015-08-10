@@ -17,10 +17,9 @@ public:
     explicit remoteController(QObject *parent = 0);
     ~remoteController();
 
-    void updatePositionJoystick(QPointF);
+    void updatePositionJoystick(int, int);
     void updatePositionTrottle(int);
     void updateOrientationDegrees(int);
-    void updateLED(bool);
 
     void connectRemote(QString, int);
     void disconnectRemote();
@@ -31,7 +30,12 @@ public:
 
     void sendCalibrate(int, int);
 
+    bool startSession();
+    bool stopSession();
+
 private:
+    bool playingSession;
+
     QTcpSocket *socket;
 
     QString serverIp;

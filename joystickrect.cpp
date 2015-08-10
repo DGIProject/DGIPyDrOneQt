@@ -5,7 +5,7 @@ joystickRect::joystickRect(remoteController *controllerJ)
     controller = controllerJ;
 
     this->setPos(70, 70);
-    controller->updatePositionJoystick(this->pos());
+    controller->updatePositionJoystick(this->pos().x(), this->pos().y());
 }
 
 QRectF joystickRect::boundingRect() const
@@ -30,14 +30,14 @@ void joystickRect::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 
     _location = QPointF(70, 70);
 
-    controller->updatePositionJoystick(_location);
+    controller->updatePositionJoystick(_location.x(), _location.y());
 }
 
 void joystickRect::setPosDirect(qreal x, qreal y)
 {
     this->setPos(x,y);
     _location = QPointF(x,y);
-    controller->updatePositionJoystick(_location);
+    controller->updatePositionJoystick(_location.x(), _location.y());
 }
 
 
@@ -88,6 +88,6 @@ void joystickRect::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
         _location = QPointF(_location.x(), 0);
     }
 
-    controller->updatePositionJoystick(_location);
+    controller->updatePositionJoystick(_location.x(), _location.y());
 }
 

@@ -7,7 +7,7 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    f_haveJoystick = input.initInput(0);
+    bool f_haveJoystick = input.initInput(0);
 
     if (f_haveJoystick)
     {
@@ -16,6 +16,9 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
        connect(&tmr,SIGNAL(timeout()),this,SLOT(readJoystickState()));
        tmr.start();
     }
+
+    useJoystick = false;
+    calibrateJoystick = false;
 
     ui->connectBeforeWidget->show();
 
@@ -155,6 +158,172 @@ void DGIpydrOne::on_buttonSendCommand_clicked()
 
 void DGIpydrOne::readJoystickState()
 {
+    sf::Joystick::update();
+
+    //gamepad button
+    if (sf::Joystick::isButtonPressed(0, 1))
+    {
+        if(!pressedButtons[1]) {
+            ui->checkGamepad->setChecked(ui->checkGamepad->isChecked() ? false : true);
+            useJoystick = !useJoystick;
+        }
+
+        pressedButtons[1] = true;
+    }
+    else {
+        pressedButtons[1] = false;
+    }
+
+    if(useJoystick) {
+        //still connected joystick
+        if(sf::Joystick::getAxisPosition(0, sf::Joystick::X) == 0) {
+            useJoystick = false;
+
+            ui->checkGamepad->setChecked(false);
+
+            return;
+        }
+
+        //collision button
+        if (sf::Joystick::isButtonPressed(0, 0))
+        {
+            if(!pressedButtons[0]) {
+                ui->checkCollision->setChecked(ui->checkCollision->isChecked() ? false : true);
+            }
+
+            pressedButtons[0] = true;
+        }
+        else {
+            pressedButtons[0] = false;
+        }
+
+        //led button
+        if (sf::Joystick::isButtonPressed(0, 2))
+        {
+            if(!pressedButtons[2]) {
+                ui->checkLED->setChecked(ui->checkLED->isChecked() ? false : true);
+            }
+
+            pressedButtons[2] = true;
+        }
+        else {
+            pressedButtons[2] = false;
+        }
+
+        //calibrate or degrees button
+        if (sf::Joystick::isButtonPressed(0, 3))
+        {
+            if(!pressedButtons[3]) {
+                calibrateJoystick = !calibrateJoystick;
+            }
+
+            pressedButtons[3] = true;
+        }
+        else {
+            pressedButtons[3] = false;
+        }
+
+        //x, y axis
+        int xJoystick = (((sf::Joystick::getAxisPosition(0, sf::Joystick::X) / 100) * 140) + 140) / 2;
+        int yJoystick = (((sf::Joystick::getAxisPosition(0, sf::Joystick::Y) / 100) * 140) + 140) / 2;
+
+        joystick->setPosDirect(xJoystick, yJoystick);
+
+        //throttle
+        float zT = sf::Joystick::getAxisPosition(0, sf::Joystick::Z);
+
+        if(zT == 0) {
+            zT = 50;
+        }
+        else if(zT < 0) {
+            zT = (int)(50 -((zT / 100) * 50));
+        }
+        else {
+            zT = (int)((1 - (zT / 100)) * 50);
+        }
+
+        if(zT != ui->throttleSlider->value()) {
+            controller->updatePositionTrottle(zT);
+
+            ui->throttleSlider->setValue(zT);
+        }
+
+        //calibration or degrees
+        int povXJoystick = sf::Joystick::getAxisPosition(0, sf::Joystick::PovX);
+        int povYJoystick = sf::Joystick::getAxisPosition(0, sf::Joystick::PovY);
+
+        if(calibrateJoystick) {
+            if(povXJoystick == 100 || povXJoystick == 70) {
+                ui->leftRightCalibrate->setValue(ui->leftRightCalibrate->value() + 1);
+            }
+            else if(povXJoystick == -100 || povXJoystick == -70) {
+                ui->leftRightCalibrate->setValue(ui->leftRightCalibrate->value() - 1);
+            }
+
+            if(povYJoystick == 100 || povYJoystick == 70) {
+                ui->frontBackCalibrate->setValue(ui->frontBackCalibrate->value() + 1);
+            }
+            else if(povYJoystick == -100 || povYJoystick == -70) {
+                ui->frontBackCalibrate->setValue(ui->frontBackCalibrate->value() - 1);
+            }
+        }
+        else {
+            if(povXJoystick == 100 || povXJoystick == 70) {
+                //degrees +
+
+                int tempDegrees = mCompassNeedle2->currentValue() + 1;
+
+                if(tempDegrees < 0)
+                {
+                    tempDegrees = 359 + tempDegrees;
+                }
+                else if(tempDegrees > 359)
+                {
+                    tempDegrees = tempDegrees - 359;
+                }
+
+                int degrees = tempDegrees - 90;
+
+                if(degrees < 0)
+                {
+                    degrees = 359 + tempDegrees - 90;
+                }
+
+                ui->degreesLabel->setText(QString::number(degrees) + "°");
+                mCompassNeedle2->setCurrentValue(tempDegrees);
+
+                controller->updateOrientationDegrees(degrees);
+            }
+            else if(povXJoystick == -100 || povXJoystick == -70) {
+                //degrees -
+
+                int tempDegrees = mCompassNeedle2->currentValue() - 1;
+
+                if(tempDegrees < 0)
+                {
+                    tempDegrees = 359 + tempDegrees;
+                }
+                else if(tempDegrees > 359)
+                {
+                    tempDegrees = tempDegrees - 359;
+                }
+
+                int degrees = tempDegrees - 90;
+
+                if(degrees < 0)
+                {
+                    degrees = 359 + tempDegrees - 90;
+                }
+
+                ui->degreesLabel->setText(QString::number(degrees) + "°");
+                mCompassNeedle2->setCurrentValue(tempDegrees);
+
+                controller->updateOrientationDegrees(degrees);
+            }
+        }
+    }
+
+    /*
     if (!input.updateState()) return;
 
     // Output buttns' state
@@ -196,11 +365,17 @@ void DGIpydrOne::readJoystickState()
 
     //qDebug() << input.getVertical() << " " << input.getHorizontal() << " " << input.getRotationZ() << input.getThrottle();
 
+    /*
     ui->leftRightCalibrate->setValue(ui->leftRightCalibrate->value()+roundf(input.getRawAxis(6)));
     ui->frontBackCalibrate->setValue(ui->frontBackCalibrate->value()+roundf(input.getRawAxis(7)));
+    */
+
    // int newThrottleValue = (int)(((-input.getVertical()*10)+10)/2);
 
+    /*
     int newThrottleValue = (int)(ui->throttleSlider->value()+((((int)input.getVertical()*10000==0)?0:(-input.getVertical()))*2));
+
+    qDebug() << newThrottleValue;
 
     if (ui->throttleSlider->value() != newThrottleValue )
     {
@@ -250,7 +425,7 @@ void DGIpydrOne::readJoystickState()
         mCompassNeedle2->setCurrentValue(temporyValue);
         //controller->updateOrientationDegrees(degrees);
     }
-
+    */
 }
 
 void DGIpydrOne::statutConnection(QString statut)
@@ -293,7 +468,7 @@ void DGIpydrOne::updateConnectionTime(int time)
 
 void DGIpydrOne::updateInformationsInterface(QString type, int value)
 {
-    qDebug() << type;
+    //qDebug() << type;
 
     QStringList list;
     list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "PITCH" << "ROLL" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY" << "MODE" << "USESONARS" << "ISSLEEPING" << "ISSTABILIZING" << "FLASHINGLED";
@@ -327,13 +502,12 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
         break;
     case 8:
         //vDownSonar = value;
-        mAttitudeNeedle->setCurrentValue(90-value);
+        mAttitudeNeedle->setCurrentValue(90 - value);
         mAttMeter->setCurrentRoll(value);
         break;
     case 9:
         vDegrees = value;
-        //ui->degreesLabel->setText(QString::number(value) + "°");
-        mCompassNeedle->setCurrentValue(vDegrees + 90);
+        mCompassNeedle->setCurrentValue(value + 90);
         break;
     case 10:
         vVerticalSpeed = value;
@@ -390,14 +564,14 @@ void DGIpydrOne::on_buttonSaveProfile_clicked()
     profile->saveProfile("test", 0, 0, 0);
 }
 
-void DGIpydrOne::on_checkLED_clicked()
+void DGIpydrOne::on_checkLED_stateChanged()
 {
     if(ui->checkLED->isChecked()) {
-        controller->updateLED(true);
+        controller->sendCommand("L Y");
     }
     else
     {
-        controller->updateLED(false);
+        controller->sendCommand("L N");
     }
 }
 
@@ -472,19 +646,15 @@ void DGIpydrOne::drawDroneInformations()
 
 void DGIpydrOne::on_leftRightCalibrate_valueChanged(int value)
 {
-    qDebug() << value;
-
     controller->sendCalibrate(value, ui->frontBackCalibrate->value());
 }
 
 void DGIpydrOne::on_frontBackCalibrate_valueChanged(int value)
 {
-    qDebug() << value;
-
     controller->sendCalibrate(ui->leftRightCalibrate->value(), value);
 }
 
-void DGIpydrOne::on_checkCollision_clicked()
+void DGIpydrOne::on_checkCollision_stateChanged()
 {
     if(ui->checkCollision->isChecked()) {
         controller->sendCommand("S Y");
@@ -564,4 +734,24 @@ void DGIpydrOne::on_buttonMoreCompass_clicked()
 void DGIpydrOne::on_buttonTest_clicked()
 {
     controller->loadInformations();
+}
+
+void DGIpydrOne::on_buttonStartSession_clicked()
+{
+    if(ui->buttonStartSession->isChecked()) {
+        if(controller->startSession()) {
+            ui->buttonStartSession->setText("Stop session");
+        }
+        else {
+            ui->buttonStartSession->setChecked(false);
+        }
+    }
+    else {
+        if(controller->stopSession()) {
+            ui->buttonStartSession->setText("Start session");
+        }
+        else {
+            ui->buttonStartSession->setChecked(true);
+        }
+    }
 }

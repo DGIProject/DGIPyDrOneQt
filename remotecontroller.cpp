@@ -2,6 +2,8 @@
 
 remoteController::remoteController(QObject *parent) : QObject(parent)
 {
+    playingSession = false;
+
     socket = new QTcpSocket(this);
     connect(socket, SIGNAL(readyRead()), this, SLOT(dataReceive()));
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
@@ -34,6 +36,8 @@ remoteController::remoteController(QObject *parent) : QObject(parent)
     maxPower = 1;
     maxAngle = 1;
     sensibility = 0;
+
+    lastCommand = "P 0|0|0|0";
 }
 
 remoteController::~remoteController()
@@ -41,47 +45,55 @@ remoteController::~remoteController()
 
 }
 
-void remoteController::updatePositionJoystick(QPointF posJoystick)
+void remoteController::updatePositionJoystick(int xJoystick, int yJoystick)
 {
-    qDebug() << "update position";
-    qDebug() << posJoystick;
+    //qDebug() << "update position";
+    //qDebug() << posJoystick;
 
-    posX = posJoystick.x();
-    posY = posJoystick.y();
+    float tempPosX = xJoystick;
+    float tempPosY = yJoystick;
 
-    if(posX > 70) {
-        posX = ((posX-70)/70)*45;
+    if(tempPosX > 70) {
+        tempPosX = (int)(((tempPosX-70)/70)*45);
     }
     else
     {
-        posX = ((posX-70)/70)*45;
+        tempPosX = (int)(((tempPosX-70)/70)*45);
     }
 
-    if(posY > 70) {
-        posY = ((posY-70)/70)*45;
+    if(tempPosY > 70) {
+        tempPosY = (int)(((tempPosY-70)/70)*45);
     }
     else
     {
-        posY = ((posY-70)/70)*45;
+        tempPosY = (int)(((tempPosY-70)/70)*45);
     }
 
-    qDebug() << posX;
-    qDebug() << posY;
+    qDebug() << tempPosX;
+    qDebug() << tempPosY;
 
-    sendCommandMotor();
+    //qDebug() << posX;
+    //qDebug() << posY;
 
-    emit updateInformations("JOYSTICK-X", (int)posX);
-    emit updateInformations("JOYSTICK-Y", (int)posY);
+    if(tempPosX != posX || tempPosY != posY) {
+        posX = tempPosX;
+        posY = tempPosY;
+
+        sendCommandMotor();
+
+        emit updateInformations("JOYSTICK-X", (int)posX);
+        emit updateInformations("JOYSTICK-Y", (int)posY);
+    }
 }
 
 void remoteController::updatePositionTrottle(int value)
 {
-    qDebug() << "update throttle";
-    qDebug() << value;
+    //qDebug() << "update throttle";
+    //qDebug() << value;
 
     power = qCeil(maxPower * value);
 
-    qDebug() << power;
+    //qDebug() << power;
 
     sendCommandMotor();
 }
@@ -91,27 +103,12 @@ void remoteController::updateOrientationDegrees(int value)
     degrees = value;
 
     sendCommandMotor();
-
-    emit updateInformations("DEGREES", (int)degrees);
-}
-
-void remoteController::updateLED(bool switchOn)
-{
-    qDebug() << "update LED";
-
-    if(switchOn) {
-        sendCommand("L Y");
-    }
-    else
-    {
-        sendCommand("L N");
-    }
 }
 
 void remoteController::connectRemote(QString ip, int port)
 {
-    qDebug() << ip;
-    qDebug() << port;
+    //qDebug() << ip;
+    //qDebug() << port;
 
     connectionStatut = 1;
 
@@ -136,7 +133,7 @@ void remoteController::dataReceive()
 
     QString message(socket->readAll());
 
-    qDebug() << message;
+    //qDebug() << message;
 
     analyzeCommand(message);
 
@@ -156,6 +153,7 @@ void remoteController::deconnected()
 {
     connectionStatut = 0;
 
+    //stopSession();
     stopTimer();
 
     emit updateStatutConnection("DISCONNECT");
@@ -206,7 +204,11 @@ void remoteController::stopTimer()
 
 void remoteController::sendCommand(QString command)
 {
-    qDebug() << command;
+    if(!playingSession) {
+        command = "P 0|0|0|0";
+    }
+
+    //qDebug() << command;
 
     //analyzeCommand(command);
 
@@ -224,6 +226,8 @@ void remoteController::sendCommand(QString command)
 
         lastRNumber = rNumber;
 
+        qDebug() << QString("C " + command + " " + QString::number(rNumber)).toStdString().c_str();
+
         socket->write(QByteArray(QString("C " + command + " " + QString::number(rNumber)).toStdString().c_str()));
     }
 
@@ -231,15 +235,15 @@ void remoteController::sendCommand(QString command)
         lastCommand = command;
     }
 
-    qDebug() << "ok";
-    qDebug() << command.split(" ")[0];
+    //qDebug() << "ok";
+    //qDebug() << command.split(" ")[0];
 
     //lastCommand = command;
 }
 
 void remoteController::sendCommandMotor()
 {
-    qDebug() << "sendCommandMotor";
+    //qDebug() << "sendCommandMotor";
     sendCommand("P " + QString::number(power) + "|" + QString::number((int)degrees) + "|" + QString::number((int)posX) + "|" + QString::number((int)posY));
 
     emit updateInformations("THROTTLE", power);
@@ -251,6 +255,25 @@ void remoteController::sendCalibrate(int lrCalibrate, int fbCalibrate)
     frontBackCalibrate = fbCalibrate;
 
     sendCommand("C " + QString::number(leftRightCalibrate) + "|" + QString::number(frontBackCalibrate));
+}
+
+bool remoteController::startSession()
+{
+    if(connectionStatut == 2) {
+        playingSession = true;
+
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool remoteController::stopSession()
+{
+    playingSession = false;
+
+    return true;
 }
 
 void remoteController::analyzeCommand(QString command)

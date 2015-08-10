@@ -70,6 +70,9 @@ QLineEdit {
       <property name="styleSheet">
        <string notr="true"/>
       </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -543,6 +546,9 @@ QLineEdit {
       </property>
      </widget>
      <widget class="QCheckBox" name="checkGamepad">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -622,6 +628,25 @@ QLineEdit {
        <string>Test</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="buttonStartSession">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>0</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Start session</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
      <zorder>throttleSlider</zorder>
      <zorder>joystickView</zorder>
      <zorder>joystickXInformation</zorder>
@@ -653,6 +678,7 @@ QLineEdit {
      <zorder>temperatureLabel</zorder>
      <zorder>humidityLabel</zorder>
      <zorder>buttonTest</zorder>
+     <zorder>buttonStartSession</zorder>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
