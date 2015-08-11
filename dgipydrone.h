@@ -68,6 +68,10 @@ private slots:
 
     void on_listIp_doubleClicked(const QModelIndex &index);
 
+    void on_axisSensibilitySlider_valueChanged(int value);
+
+    void on_rotationSensibilitySlider_valueChanged(int value);
+
 private:
     Ui::DGIpydrOne *ui;
 

@@ -21,6 +21,7 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
     calibrateJoystick = false;
 
     ui->connectBeforeWidget->show();
+    ui->connectBefore_optionsWidget->show();
 
     ui->buttonCancelConnect->setEnabled(false);
 
@@ -436,6 +437,7 @@ void DGIpydrOne::statutConnection(QString statut)
         updateConsole(tr("<em>Connected</em>"));
 
         ui->connectBeforeWidget->hide();
+        ui->connectBefore_optionsWidget->hide();
     }
     else if(statut == "DISCONNECT") {
         updateConsole(tr("<em>Disconnected</em>"));
@@ -444,6 +446,7 @@ void DGIpydrOne::statutConnection(QString statut)
         ui->buttonCancelConnect->setEnabled(false);
 
         ui->connectBeforeWidget->show();
+        ui->connectBefore_optionsWidget->show();
     }
     else
     {
@@ -777,4 +780,14 @@ void DGIpydrOne::on_listIp_doubleClicked(const QModelIndex &index)
     qDebug() << ui->listIp->currentItem()->text();
 
     ui->serverIp->setText(ui->listIp->currentItem()->text());
+}
+
+void DGIpydrOne::on_axisSensibilitySlider_valueChanged(int value)
+{
+    controller->sendCommand("O " + QString::number(value) + "|" + QString::number(ui->rotationSensibilitySlider->value()));
+}
+
+void DGIpydrOne::on_rotationSensibilitySlider_valueChanged(int value)
+{
+    controller->sendCommand("O " + QString::number(ui->axisSensibilitySlider->value()) + "|" + QString::number(value));
 }

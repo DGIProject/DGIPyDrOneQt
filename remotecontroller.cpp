@@ -199,9 +199,7 @@ void remoteController::sendCommand(QString command)
         command = "P 0|0|0|0";
     }
 
-    //qDebug() << command;
-
-    //analyzeCommand(command);
+    qDebug() << command;
 
     if(connectionStatut == 2) {
         rNumber = randInt(0, 9);
