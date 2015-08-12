@@ -185,11 +185,13 @@ void DGIpydrOne::readJoystickState()
             return;
         }
 
-        //collision button
+        //sleep button
         if (sf::Joystick::isButtonPressed(0, 0))
         {
             if(!pressedButtons[0]) {
-                ui->checkCollision->setChecked(ui->checkCollision->isChecked() ? false : true);
+                //ui->checkCollision->setChecked(ui->checkCollision->isChecked() ? false : true);
+
+                ui->buttonStartSession->click();
             }
 
             pressedButtons[0] = true;
@@ -474,7 +476,7 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
     //qDebug() << type;
 
     QStringList list;
-    list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "PITCH" << "ROLL" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY" << "MODE" << "USESONARS" << "ISSLEEPING" << "ISSTABILIZING" << "FLASHINGLED";
+    list << "JOYSTICK-X" << "JOYSTICK-Y" << "THROTTLE" << "LSONAR" << "RSONAR" << "FSONAR" << "BSONAR" << "PITCH" << "ROLL" << "DEGREES" << "VSPEED" << "HSPEED" << "BATTERY" << "PRESSURE" << "TEMPERATURE" << "HUMIDITY" << "MODE" << "USESONARS" << "AXISSENSIBILITY" << "ROTATIONSENSIBILITY" << "FLASHINGLED";
 
     switch (list.indexOf(type)) {
     case 0:
@@ -541,10 +543,10 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
         ui->checkCollision->setChecked((value == 1) ? true : false);
         break;
     case 18:
-        ui->checkLanding->setChecked((value == 1) ? true : false);
+        ui->axisSensibilitySlider->setValue(value);
         break;
     case 19:
-        //stabilizing
+        ui->rotationSensibilitySlider->setValue(value);
         break;
     case 20:
         ui->checkLED->setChecked((value == 1) ? true : false);
@@ -790,4 +792,14 @@ void DGIpydrOne::on_axisSensibilitySlider_valueChanged(int value)
 void DGIpydrOne::on_rotationSensibilitySlider_valueChanged(int value)
 {
     controller->sendCommand("O " + QString::number(ui->axisSensibilitySlider->value()) + "|" + QString::number(value));
+}
+
+void DGIpydrOne::on_maximalPowerSliver_valueChanged(int value)
+{
+    controller->updateProperties(value, ui->maximalAngleSlider->value());
+}
+
+void DGIpydrOne::on_maximalAngleSlider_valueChanged(int value)
+{
+    controller->updateProperties(ui->maximalPowerSliver->value(), value);
 }

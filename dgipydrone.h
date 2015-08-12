@@ -72,6 +72,10 @@ private slots:
 
     void on_rotationSensibilitySlider_valueChanged(int value);
 
+    void on_maximalPowerSliver_valueChanged(int value);
+
+    void on_maximalAngleSlider_valueChanged(int value);
+
 private:
     Ui::DGIpydrOne *ui;
 

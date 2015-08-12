@@ -25,7 +25,7 @@ public:
     void disconnectRemote();
     void sendCommand(QString);
 
-    void updateValues(float, float, int);
+    void updateProperties(int, int);
     void loadInformations();
 
     void sendCalibrate(int, int);
@@ -51,29 +51,28 @@ private:
 
     int power;
 
-    float degrees;
+    int degrees;
 
-    float posX;
-    float posY;
+    int posX;
+    int posY;
 
     int controlMode;
 
     int leftRightCalibrate;
     int frontBackCalibrate;
 
-    float maxPower;
-    float maxAngle;
-    int sensibility;
+    int maxPower;
+    int maxAngle;
 
     QString lastCommand;
 
-    int rNumber;
     int lastRNumber;
 
     void analyzeCommand(QString);
     void stopTimer();
 
     int randInt(int, int);
+    int randomNumber();
 
 private slots:
     void dataReceive();
