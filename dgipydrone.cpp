@@ -741,6 +741,10 @@ void DGIpydrOne::on_buttonStartSession_clicked()
     if(ui->buttonStartSession->isChecked()) {
         if(controller->startSession()) {
             ui->buttonStartSession->setText("Stop session");
+
+            ui->throttleSlider->setValue(0);
+
+            joystick->setPosDirect(70, 70);
         }
         else {
             ui->buttonStartSession->setChecked(false);

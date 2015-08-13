@@ -191,14 +191,14 @@ void remoteController::sendCommand(QString command)
 
         if(commandType == "P") {
             socket->write(QByteArray(QString("C " + command + " " + QString::number(randomNumber())).toStdString().c_str()));
+
+            lastCommand = command;
         }
         else {
             for(int i = 0; i < 5; i++) {
                 socket->write(QByteArray(QString("C " + command + " " + QString::number(randomNumber())).toStdString().c_str()));
             }
         }
-
-        lastCommand = command;
     }
 }
 
@@ -256,8 +256,6 @@ bool remoteController::startSession()
 
 bool remoteController::stopSession()
 {
-    sendCommand("H Y");
-
     playingSession = false;
 
     return true;
