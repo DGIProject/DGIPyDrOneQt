@@ -178,27 +178,16 @@ void remoteController::stopTimer()
 
 void remoteController::sendCommand(QString command)
 {
+    qDebug() << command;
+
     if(!playingSession) {
         command = "P 0|0|0|0";
     }
 
-    qDebug() << command;
-
-    QString commandType = command.split(" ")[0];
-
     if(connectionStatut == 2) {
-        qDebug() << QString("C " + command + " " + QString::number(randomNumber())).toStdString().c_str();
+        socket->write(QByteArray(QString("C " + command + " " + QString::number(randomNumber())).toStdString().c_str()));
 
-        if(commandType == "P") {
-            socket->write(QByteArray(QString("C " + command + " " + QString::number(randomNumber())).toStdString().c_str()));
-
-            lastCommand = command;
-        }
-        else {
-            for(int i = 0; i < 5; i++) {
-                socket->write(QByteArray(QString("C " + command + " " + QString::number(randomNumber())).toStdString().c_str()));
-            }
-        }
+        lastCommand = command;
     }
 }
 
@@ -315,7 +304,5 @@ void remoteController::updateProperties(int nMaxPower, int nMaxAngle)
 
 void remoteController::loadInformations()
 {
-    for(int i = 0; i < 5; i++) {
-        sendCommand("I Y");
-    }
+    sendCommand("I Y");
 }
