@@ -51,8 +51,11 @@ QLineEdit {
       <height>421</height>
      </rect>
     </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -769,9 +772,9 @@ QPushButton:pressed {
      <widget class="QLabel" name="connectionTime">
       <property name="geometry">
        <rect>
-        <x>440</x>
+        <x>420</x>
         <y>20</y>
-        <width>31</width>
+        <width>51</width>
         <height>20</height>
        </rect>
       </property>
@@ -779,6 +782,9 @@ QPushButton:pressed {
        <font>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
       </property>
       <property name="text">
        <string>0s</string>

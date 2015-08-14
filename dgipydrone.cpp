@@ -116,6 +116,8 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 
     sceneJoystick->addItem(joystick);
 
+    firstTimeConnection = false;
+
     vLeftSonar = vRightSonar = vFrontSonar = vBackSonar = vUpSonar = vBackSonar = vDegrees = vVerticalSpeed = vHorizontalSpeed = vPressure = 0;
 
     drawDroneInformations();
@@ -449,6 +451,10 @@ void DGIpydrOne::statutConnection(QString statut)
 
         ui->connectBeforeWidget->show();
         ui->connectBefore_optionsWidget->show();
+
+        QMessageBox::warning(this, "Switch-off motors", "Think to switch-off motors of your drone.", QMessageBox::Ok);
+
+        firstTimeConnection = false;
     }
     else
     {
@@ -468,7 +474,11 @@ void DGIpydrOne::updateConsole(QString text)
 
 void DGIpydrOne::updateConnectionTime(int time)
 {
-    ui->connectionTime->setText(QString::number(time) + "s");
+    int minutes = qFloor((float)time / 60);
+    int seconds = time - (60 * minutes);
+    int hours = qFloor((float)minutes / 60);
+
+    ui->connectionTime->setText(((hours > 0) ? (QString::number(hours) + "h") : "") + ((minutes > 0) ? (QString::number(minutes) + "m") : "") + QString::number(seconds) + "s");
 }
 
 void DGIpydrOne::updateInformationsInterface(QString type, int value)
@@ -502,7 +512,6 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
         break;
     case 7:
         //vUpSonar = value;
-        qDebug() << value;
         mAttMeter->setCurrentPitch(value);
         break;
     case 8:
@@ -513,6 +522,12 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
     case 9:
         vDegrees = value;
         mCompassNeedle->setCurrentValue(value + 90);
+
+        if(!firstTimeConnection) {
+            mCompassNeedle2->setCurrentValue(value + 90);
+            controller->updateOrientationDegrees(value);
+            firstTimeConnection = true;
+        }
         break;
     case 10:
         vVerticalSpeed = value;

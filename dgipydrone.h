@@ -83,6 +83,8 @@ private:
 
     AnalyzeNetwork *network;
 
+    bool firstTimeConnection;
+
     int vLeftSonar,
     vRightSonar,
     vFrontSonar,

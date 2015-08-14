@@ -26,7 +26,6 @@ public:
     void sendCommand(QString);
 
     void updateProperties(int, int);
-    void loadInformations();
 
     void sendCalibrate(int, int);
 
@@ -82,7 +81,7 @@ private slots:
 
     void actualizeConnectionTime();
     void sendCommandMotor();
-    void sendLastCommand();
+    void sendCommandDrone();
 
 signals:
     void updateStatutConnection(QString);

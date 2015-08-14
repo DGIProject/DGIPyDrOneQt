@@ -14,7 +14,7 @@ remoteController::remoteController(QObject *parent) : QObject(parent)
     connect(timerServer, SIGNAL(timeout()), this, SLOT(actualizeConnectionTime()));
 
     timerData = new QTimer(this);
-    connect(timerData, SIGNAL(timeout()), this, SLOT(sendLastCommand()));
+    connect(timerData, SIGNAL(timeout()), this, SLOT(sendCommandDrone()));
 
     connectionStatut = 0;
     connectionTime = 0;
@@ -61,6 +61,14 @@ void remoteController::updatePositionJoystick(int xJoystick, int yJoystick)
         posX = tempPosX;
         posY = tempPosY;
 
+        if(posX == -1) {
+            posX = 0;
+        }
+
+        if(posY == -1) {
+            posY = 0;
+        }
+
         sendCommandMotor();
 
         emit updateInformations("JOYSTICK-X", posX);
@@ -72,7 +80,9 @@ void remoteController::updatePositionTrottle(int value)
 {
     power = qCeil(((float)maxPower / 100) * value);
 
-    sendCommandMotor();
+    if((power % 2) == 0) {
+        sendCommandMotor();
+    }
 }
 
 void remoteController::updateOrientationDegrees(int value)
@@ -107,8 +117,6 @@ void remoteController::dataReceive()
 
     QString message(socket->readAll());
 
-    //qDebug() << message;
-
     analyzeCommand(message);
 
     emit updateConsole("-DRONE- " + message);
@@ -118,7 +126,7 @@ void remoteController::connected()
 {
     connectionStatut = 2;
 
-    timerData->start(250);
+    timerData->start(150);
 
     emit updateStatutConnection("CONNECT");
 }
@@ -176,18 +184,20 @@ void remoteController::stopTimer()
     emit updateConnectionTime(connectionTime);
 }
 
-void remoteController::sendCommand(QString command)
-{
-    qDebug() << command;
+void remoteController::sendCommand(QString command) {
+    lastCommand = command;
+}
 
+void remoteController::sendCommandDrone()
+{
     if(!playingSession) {
-        command = "P 0|0|0|0";
+        lastCommand = "P 0|0|0|0";
     }
 
     if(connectionStatut == 2) {
-        socket->write(QByteArray(QString("C " + command + " " + QString::number(randomNumber())).toStdString().c_str()));
+        qDebug() << "C " + lastCommand;
 
-        lastCommand = command;
+        socket->write(QByteArray(QString("C " + lastCommand).toStdString().c_str()));
     }
 }
 
@@ -233,7 +243,6 @@ bool remoteController::startSession()
     if(connectionStatut == 2) {
         playingSession = true;
 
-        loadInformations();
         sendCommand("H N");
 
         return true;
@@ -252,8 +261,6 @@ bool remoteController::stopSession()
 
 void remoteController::analyzeCommand(QString command)
 {
-    //qDebug() << "analyzeCommand";
-
     QStringList commandSplit = command.split(" ");
 
     if(commandSplit[0] == "D") {
@@ -286,23 +293,10 @@ void remoteController::analyzeCommand(QString command)
 
         qDebug() << dataMessage;
     }
-    else if(commandSplit[0] == "C") {
-        qDebug() << "calibrate receive " + commandSplit[1];
-    }
-}
-
-void remoteController::sendLastCommand()
-{
-    sendCommand(lastCommand);
 }
 
 void remoteController::updateProperties(int nMaxPower, int nMaxAngle)
 {
     maxPower = nMaxPower;
     maxAngle = nMaxAngle;
-}
-
-void remoteController::loadInformations()
-{
-    sendCommand("I Y");
 }
