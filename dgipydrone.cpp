@@ -20,6 +20,10 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
     useJoystick = false;
     calibrateJoystick = false;
 
+    ui->sonarView->hide();
+
+    ui->profileLoaded->setText(ui->profileName->text());
+
     ui->connectBeforeWidget->hide();
     ui->connectBefore_optionsWidget->show();
 
@@ -106,7 +110,7 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
     connect(controller, SIGNAL(updateConnectionTime(int)), this, SLOT(updateConnectionTime(int)));
     connect(controller, SIGNAL(updateInformations(QString,int)), this, SLOT(updateInformationsInterface(QString, int)));
 
-    ui->joystickView->setGeometry(10, 110, 250, 250);
+    ui->joystickView->setGeometry(10, 160, 250, 250);
 
     sceneJoystick = new QGraphicsScene();
     sceneJoystick->setSceneRect(0,0, ui->joystickView->width() - 10, ui->joystickView->height() - 10);
@@ -133,6 +137,8 @@ DGIpydrOne::~DGIpydrOne()
 void DGIpydrOne::on_buttonConnect_clicked()
 {
     updateConsole(tr("<em>Connecting ...</em>"));
+
+    ui->buttonFastConnect->setText("Connecting ...");
 
     ui->buttonConnect->setEnabled(false);
     ui->buttonCancelConnect->setEnabled(true);
@@ -440,11 +446,15 @@ void DGIpydrOne::statutConnection(QString statut)
     if(statut == "CONNECT") {
         updateConsole(tr("<em>Connected</em>"));
 
+        ui->buttonFastConnect->setText("Connected !");
+
         ui->connectBeforeWidget->hide();
         ui->connectBefore_optionsWidget->hide();
     }
     else if(statut == "DISCONNECT") {
         updateConsole(tr("<em>Disconnected</em>"));
+
+        ui->buttonFastConnect->setText("Disconnected. Drone !");
 
         ui->buttonConnect->setEnabled(true);
         ui->buttonCancelConnect->setEnabled(false);
@@ -459,6 +469,8 @@ void DGIpydrOne::statutConnection(QString statut)
     else
     {
         updateConsole(statut);
+
+        ui->buttonFastConnect->setText("Disconnected. Drone !");
 
         ui->buttonConnect->setEnabled(true);
     }
@@ -478,7 +490,10 @@ void DGIpydrOne::updateConnectionTime(int time)
     int seconds = time - (60 * minutes);
     int hours = qFloor((float)minutes / 60);
 
-    ui->connectionTime->setText(((hours > 0) ? (QString::number(hours) + "h") : "") + ((minutes > 0) ? (QString::number(minutes) + "m") : "") + QString::number(seconds) + "s");
+    QString allTime = ((hours > 0) ? (QString::number(hours) + "h") : "") + ((minutes > 0) ? (QString::number(minutes) + "m") : "") + QString::number(seconds) + "s";
+
+    ui->connectionTime->setText(allTime);
+    ui->buttonFastConnect->setText("Connected ! " + allTime);
 }
 
 void DGIpydrOne::updateInformationsInterface(QString type, int value)
@@ -490,10 +505,10 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
 
     switch (list.indexOf(type)) {
     case 0:
-        ui->joystickXInformation->setText("Joystick X : " + QString::number(value) + "°");
+        ui->joystickXInformation->setText(QString::number(value) + "°");
         break;
     case 1:
-        ui->joystickYInformation->setText("Joystick Y : " + QString::number(value) + "°");
+        ui->joystickYInformation->setText(QString::number(value) + "°");
         break;
     case 2:
         ui->throttleLabel->setText(QString::number(value) + "%");
@@ -821,4 +836,11 @@ void DGIpydrOne::on_maximalPowerSliver_valueChanged(int value)
 void DGIpydrOne::on_maximalAngleSlider_valueChanged(int value)
 {
     controller->updateProperties(ui->maximalPowerSliver->value(), value);
+}
+
+void DGIpydrOne::on_buttonFastConnect_clicked()
+{
+    if(controller->connectionStatut == 0) {
+        on_buttonConnect_clicked();
+    }
 }

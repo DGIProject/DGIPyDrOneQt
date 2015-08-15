@@ -33,6 +33,8 @@ public:
     bool startSession();
     bool stopSession();
 
+    int connectionStatut;
+
 private:
     bool playingSession;
 
@@ -44,7 +46,6 @@ private:
     QTimer *timerServer;
     QTimer *timerData;
 
-    int connectionStatut;
     int connectionTime;
 
     quint16 sizeMessage;

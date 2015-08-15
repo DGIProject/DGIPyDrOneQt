@@ -76,6 +76,8 @@ private slots:
 
     void on_maximalAngleSlider_valueChanged(int value);
 
+    void on_buttonFastConnect_clicked();
+
 private:
     Ui::DGIpydrOne *ui;
 

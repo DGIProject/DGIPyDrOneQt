@@ -52,8 +52,6 @@ void remoteController::updatePositionJoystick(int xJoystick, int yJoystick)
     tempPosX = (int)(((tempPosX-70)/70)*45);
     tempPosY = (int)(((tempPosY-70)/70)*45);
 
-    qDebug() << controlMode;
-
     if(controlMode == 1) {
         tempPosX = (int)((xJoystick > 70) ? (((float)maxAngle/45) * tempPosX) : -(((float)maxAngle/45) * tempPosX));
         tempPosY = (int)((yJoystick > 70) ? (((float)maxAngle/45) * tempPosY) : -(((float)maxAngle/45) * tempPosY));
@@ -110,7 +108,6 @@ void remoteController::connectRemote(QString ip, int port)
     socket->abort();
 
     socket->connectToHost(serverIp, serverPort);
-    timerServer->start(1000);
 }
 
 void remoteController::disconnectRemote()
@@ -135,6 +132,7 @@ void remoteController::connected()
     connectionStatut = 2;
 
     timerData->start(150);
+    timerServer->start(1000);
 
     emit updateStatutConnection("CONNECT");
 }

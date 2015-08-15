@@ -3,5 +3,9 @@
         <file>carre.png</file>
         <file>drone.jpg</file>
         <file>line.jpg</file>
+        <file>checked.png</file>
+        <file>unchecked.png</file>
+        <file>arrowDown.png</file>
+        <file>arrowUp.png</file>
     </qresource>
 </RCC>
