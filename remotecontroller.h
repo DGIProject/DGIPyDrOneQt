@@ -20,6 +20,7 @@ public:
     void updatePositionJoystick(int, int);
     void updatePositionTrottle(int);
     void updateOrientationDegrees(int);
+    void updateControlMode(int);
 
     void connectRemote(QString, int);
     void disconnectRemote();

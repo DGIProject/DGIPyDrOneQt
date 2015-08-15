@@ -20,7 +20,7 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
     useJoystick = false;
     calibrateJoystick = false;
 
-    ui->connectBeforeWidget->show();
+    ui->connectBeforeWidget->hide();
     ui->connectBefore_optionsWidget->show();
 
     ui->buttonCancelConnect->setEnabled(false);
@@ -687,14 +687,14 @@ void DGIpydrOne::on_checkCollision_stateChanged()
 void DGIpydrOne::on_manualMode_clicked()
 {
     if(ui->manualMode->isChecked()) {
-        controller->sendCommand("M 0");
+        controller->updateControlMode(0);
     }
 }
 
 void DGIpydrOne::on_automaticMode_clicked()
 {
     if(ui->automaticMode->isChecked()) {
-        controller->sendCommand("M 1");
+        controller->updateControlMode(1);
     }
 }
 

@@ -34,7 +34,7 @@ remoteController::remoteController(QObject *parent) : QObject(parent)
     frontBackCalibrate = 0;
 
     maxPower = 100;
-    maxAngle = 45;
+    maxAngle = 20;
 
     lastCommand = "P 0|0|0|0";
 }
@@ -51,6 +51,8 @@ void remoteController::updatePositionJoystick(int xJoystick, int yJoystick)
 
     tempPosX = (int)(((tempPosX-70)/70)*45);
     tempPosY = (int)(((tempPosY-70)/70)*45);
+
+    qDebug() << controlMode;
 
     if(controlMode == 1) {
         tempPosX = (int)((xJoystick > 70) ? (((float)maxAngle/45) * tempPosX) : -(((float)maxAngle/45) * tempPosX));
@@ -90,6 +92,12 @@ void remoteController::updateOrientationDegrees(int value)
     degrees = value;
 
     sendCommandMotor();
+}
+
+void remoteController::updateControlMode(int mode)
+{
+    controlMode = mode;
+    sendCommand("M " + QString::number(mode));
 }
 
 void remoteController::connectRemote(QString ip, int port)
