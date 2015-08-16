@@ -142,7 +142,7 @@ QTabBar::tab:!selected {
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -552,7 +552,7 @@ QPushButton:checked  {
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>10</y>
+        <y>-70</y>
         <width>181</width>
         <height>81</height>
        </rect>
@@ -786,8 +786,6 @@ QSlider::sub-page:vertical {
 
 QProgressBar::chunk {
     background-color: rgb(32, 160, 186);
-    width: 18px;
-    margin: 0.5px;
 }</string>
        </property>
        <property name="value">
@@ -911,7 +909,7 @@ QProgressBar::chunk {
        <rect>
         <x>640</x>
         <y>100</y>
-        <width>101</width>
+        <width>111</width>
         <height>41</height>
        </rect>
       </property>
@@ -922,15 +920,223 @@ QProgressBar::chunk {
      <widget class="QLabel" name="profileLoaded">
       <property name="geometry">
        <rect>
-        <x>750</x>
+        <x>760</x>
         <y>100</y>
-        <width>61</width>
+        <width>51</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
        <string>profile</string>
       </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_10">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>10</y>
+        <width>181</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Calibrate</string>
+      </property>
+      <widget class="QLabel" name="motorCalibrateLabel">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>16</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="calibrateMotor1Slider">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>20</y>
+         <width>22</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-60</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="calibrateMotor3Slider">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>30</y>
+         <width>22</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-60</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="calibrateMotor2Slider">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>20</y>
+         <width>22</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-60</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="calibrateMotor4Slider">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>30</y>
+         <width>22</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-60</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line_13">
+       <property name="geometry">
+        <rect>
+         <x>57</x>
+         <y>35</y>
+         <width>81</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line_14">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>30</y>
+         <width>41</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line_15">
+       <property name="geometry">
+        <rect>
+         <x>127</x>
+         <y>30</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="calibrateMotor1Label">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>0</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>0%</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="calibrateMotor4Label">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>10</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>0%</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="calibrateMotor3Label">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>10</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>0%</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="calibrateMotor2Label">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>0</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>0%</string>
+       </property>
+      </widget>
+      <zorder>calibrateMotor1Label</zorder>
+      <zorder>line_15</zorder>
+      <zorder>line_14</zorder>
+      <zorder>line_13</zorder>
+      <zorder>motorCalibrateLabel</zorder>
+      <zorder>calibrateMotor1Slider</zorder>
+      <zorder>calibrateMotor3Slider</zorder>
+      <zorder>calibrateMotor2Slider</zorder>
+      <zorder>calibrateMotor4Slider</zorder>
+      <zorder>calibrateMotor4Label</zorder>
+      <zorder>calibrateMotor3Label</zorder>
+      <zorder>calibrateMotor2Label</zorder>
      </widget>
      <zorder>throttleSlider</zorder>
      <zorder>checkLED</zorder>
@@ -956,18 +1162,19 @@ QProgressBar::chunk {
      <zorder>groupBox_8</zorder>
      <zorder>buttonFastConnect</zorder>
      <zorder>profileLoaded</zorder>
+     <zorder>groupBox_10</zorder>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
       <string>Profile/connection</string>
      </attribute>
-     <widget class="QTextEdit" name="console">
+     <widget class="QTextEdit" name="consoleReceive">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>30</y>
-        <width>291</width>
-        <height>141</height>
+        <x>630</x>
+        <y>40</y>
+        <width>321</width>
+        <height>181</height>
        </rect>
       </property>
       <property name="readOnly">
@@ -977,20 +1184,20 @@ QProgressBar::chunk {
      <widget class="QLineEdit" name="commandText">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>180</y>
-        <width>251</width>
-        <height>31</height>
+        <x>630</x>
+        <y>380</y>
+        <width>271</width>
+        <height>41</height>
        </rect>
       </property>
      </widget>
      <widget class="QPushButton" name="buttonSendCommand">
       <property name="geometry">
        <rect>
-        <x>590</x>
-        <y>180</y>
-        <width>31</width>
-        <height>31</height>
+        <x>910</x>
+        <y>380</y>
+        <width>41</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="text">
@@ -1021,8 +1228,8 @@ QProgressBar::chunk {
      <widget class="QPushButton" name="buttonPing">
       <property name="geometry">
        <rect>
-        <x>630</x>
-        <y>30</y>
+        <x>330</x>
+        <y>10</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -1034,18 +1241,18 @@ QProgressBar::chunk {
      <widget class="QListWidget" name="listIp">
       <property name="geometry">
        <rect>
-        <x>630</x>
-        <y>60</y>
-        <width>141</width>
-        <height>361</height>
+        <x>330</x>
+        <y>40</y>
+        <width>291</width>
+        <height>181</height>
        </rect>
       </property>
      </widget>
      <widget class="QPushButton" name="buttonStopPing">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>30</y>
+        <x>410</x>
+        <y>10</y>
         <width>61</width>
         <height>23</height>
        </rect>
@@ -1543,7 +1750,7 @@ QPushButton:pressed {
         <string>Max power</string>
        </property>
       </widget>
-      <widget class="QSlider" name="maximalPowerSliver">
+      <widget class="QSlider" name="maximalPowerSlider">
        <property name="geometry">
         <rect>
          <x>110</x>
@@ -1714,6 +1921,19 @@ QPushButton:pressed {
         <string>Save profile</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="buttonLoadProfileFile">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>350</y>
+         <width>71</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load profile</string>
+       </property>
+      </widget>
       <zorder>line_12</zorder>
       <zorder>line_11</zorder>
       <zorder>line_9</zorder>
@@ -1727,7 +1947,7 @@ QPushButton:pressed {
       <zorder>buttonConnect</zorder>
       <zorder>buttonCancelConnect</zorder>
       <zorder>label_3</zorder>
-      <zorder>maximalPowerSliver</zorder>
+      <zorder>maximalPowerSlider</zorder>
       <zorder>label_5</zorder>
       <zorder>label_13</zorder>
       <zorder>label_8</zorder>
@@ -1735,21 +1955,35 @@ QPushButton:pressed {
       <zorder>label_14</zorder>
       <zorder>label_15</zorder>
       <zorder>buttonSaveProfile</zorder>
+      <zorder>buttonLoadProfileFile</zorder>
      </widget>
      <widget class="QLabel" name="label_19">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>10</y>
-        <width>47</width>
-        <height>13</height>
+        <x>630</x>
+        <y>20</y>
+        <width>81</width>
+        <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Console</string>
+       <string>Receive &amp; Send</string>
       </property>
      </widget>
-     <zorder>console</zorder>
+     <widget class="QTextEdit" name="consoleSend">
+      <property name="geometry">
+       <rect>
+        <x>630</x>
+        <y>230</y>
+        <width>321</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <zorder>consoleReceive</zorder>
      <zorder>commandText</zorder>
      <zorder>buttonSendCommand</zorder>
      <zorder>connectionTime</zorder>
@@ -1760,6 +1994,7 @@ QPushButton:pressed {
      <zorder>label_19</zorder>
      <zorder>groupBox_2</zorder>
      <zorder>connectBefore_optionsWidget</zorder>
+     <zorder>consoleSend</zorder>
     </widget>
    </widget>
   </widget>

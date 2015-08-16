@@ -106,7 +106,7 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
     controller = new remoteController();
 
     connect(controller, SIGNAL(updateStatutConnection(QString)), this, SLOT(statutConnection(QString)));
-    connect(controller, SIGNAL(updateConsole(QString)), this, SLOT(updateConsole(QString)));
+    connect(controller, SIGNAL(updateConsole(QString, QString)), this, SLOT(updateConsole(QString, QString)));
     connect(controller, SIGNAL(updateConnectionTime(int)), this, SLOT(updateConnectionTime(int)));
     connect(controller, SIGNAL(updateInformations(QString,int)), this, SLOT(updateInformationsInterface(QString, int)));
 
@@ -122,6 +122,8 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 
     firstTimeConnection = false;
 
+    motorCalibrate = 0;
+
     vLeftSonar = vRightSonar = vFrontSonar = vBackSonar = vUpSonar = vBackSonar = vDegrees = vVerticalSpeed = vHorizontalSpeed = vPressure = 0;
 
     drawDroneInformations();
@@ -136,7 +138,7 @@ DGIpydrOne::~DGIpydrOne()
 
 void DGIpydrOne::on_buttonConnect_clicked()
 {
-    updateConsole(tr("<em>Connecting ...</em>"));
+    updateConsole("RECEIVE", tr("<em>Connecting ...</em>"));
 
     ui->buttonFastConnect->setText("Connecting ...");
 
@@ -151,14 +153,14 @@ void DGIpydrOne::on_buttonCancelConnect_clicked()
     ui->buttonConnect->setEnabled(true);
     controller->disconnectRemote();
 
-    updateConsole(tr("<em>Canceled connection.</em>"));
+    updateConsole("RECEIVE", tr("<em>Canceled connection.</em>"));
 }
 
 void DGIpydrOne::on_buttonSendCommand_clicked()
 {
     if(ui->commandText->text().length() > 0) {
         controller->sendCommand(ui->commandText->text());
-        updateConsole("-ME- " + ui->commandText->text());
+        updateConsole("SEND", ("-ME- " + ui->commandText->text()));
 
         ui->commandText->clear();
         ui->commandText->setFocus();
@@ -264,6 +266,7 @@ void DGIpydrOne::readJoystickState()
         int povYJoystick = sf::Joystick::getAxisPosition(0, sf::Joystick::PovY);
 
         if(calibrateJoystick) {
+            /*
             if(povXJoystick == 100 || povXJoystick == 70) {
                 ui->leftRightCalibrate->setValue(ui->leftRightCalibrate->value() + 1);
             }
@@ -276,6 +279,82 @@ void DGIpydrOne::readJoystickState()
             }
             else if(povYJoystick == -100 || povYJoystick == -70) {
                 ui->frontBackCalibrate->setValue(ui->frontBackCalibrate->value() - 1);
+            }
+            */
+
+            if(povXJoystick == 100 || povXJoystick == 70) {
+                if(!pressedButtons[4]) {
+                    if(motorCalibrate == 3) {
+                        motorCalibrate = 0;
+                    }
+                    else {
+                        motorCalibrate++;
+                    }
+
+                    ui->motorCalibrateLabel->setText(QString::number(motorCalibrate));
+                }
+
+                pressedButtons[4] = true;
+            }
+            else {
+                pressedButtons[4] = false;
+            }
+
+            if(povXJoystick == -100 || povXJoystick == -70) {
+                if(!pressedButtons[5]) {
+                    if(motorCalibrate == 0) {
+                        motorCalibrate = 3;
+                    }
+                    else {
+                        motorCalibrate--;
+                    }
+
+                    ui->motorCalibrateLabel->setText(QString::number(motorCalibrate));
+                }
+
+                pressedButtons[5] = true;
+            }
+            else {
+                pressedButtons[5] = false;
+            }
+
+            if(povYJoystick == 100 || povYJoystick == 70) {
+                switch (motorCalibrate) {
+                case 0:
+                    ui->calibrateMotor1Slider->setValue(ui->calibrateMotor1Slider->value() + 1);
+                    break;
+                case 1:
+                    ui->calibrateMotor2Slider->setValue(ui->calibrateMotor2Slider->value() + 1);
+                    break;
+                case 2:
+                    ui->calibrateMotor3Slider->setValue(ui->calibrateMotor3Slider->value() + 1);
+                    break;
+                case 3:
+                    ui->calibrateMotor4Slider->setValue(ui->calibrateMotor4Slider->value() + 1);
+                    break;
+                default:
+                    qDebug() << "error motor calibrate";
+                    break;
+                }
+            }
+            else if(povYJoystick == -100 || povYJoystick == -70) {
+                switch (motorCalibrate) {
+                case 0:
+                    ui->calibrateMotor1Slider->setValue(ui->calibrateMotor1Slider->value() - 1);
+                    break;
+                case 1:
+                    ui->calibrateMotor2Slider->setValue(ui->calibrateMotor2Slider->value() - 1);
+                    break;
+                case 2:
+                    ui->calibrateMotor3Slider->setValue(ui->calibrateMotor3Slider->value() - 1);
+                    break;
+                case 3:
+                    ui->calibrateMotor4Slider->setValue(ui->calibrateMotor4Slider->value() - 1);
+                    break;
+                default:
+                    qDebug() << "error motor calibrate";
+                    break;
+                }
             }
         }
         else {
@@ -444,7 +523,7 @@ void DGIpydrOne::statutConnection(QString statut)
     qDebug() << statut;
 
     if(statut == "CONNECT") {
-        updateConsole(tr("<em>Connected</em>"));
+        updateConsole("RECEIVE", tr("<em>Connected</em>"));
 
         ui->buttonFastConnect->setText("Connected !");
 
@@ -452,7 +531,7 @@ void DGIpydrOne::statutConnection(QString statut)
         ui->connectBefore_optionsWidget->hide();
     }
     else if(statut == "DISCONNECT") {
-        updateConsole(tr("<em>Disconnected</em>"));
+        updateConsole("RECEIVE", tr("<em>Disconnected</em>"));
 
         ui->buttonFastConnect->setText("Disconnected. Drone !");
 
@@ -468,7 +547,7 @@ void DGIpydrOne::statutConnection(QString statut)
     }
     else
     {
-        updateConsole(statut);
+        updateConsole("RECEIVE", statut);
 
         ui->buttonFastConnect->setText("Disconnected. Drone !");
 
@@ -476,12 +555,20 @@ void DGIpydrOne::statutConnection(QString statut)
     }
 }
 
-void DGIpydrOne::updateConsole(QString text)
+void DGIpydrOne::updateConsole(QString type, QString text)
 {
-    ui->console->append(text);
+    if(type == "RECEIVE") {
+        ui->consoleReceive->append(text);
 
-    QScrollBar *sb = ui->console->verticalScrollBar();
-    sb->setValue(sb->maximum());
+        QScrollBar *sb = ui->consoleReceive->verticalScrollBar();
+        sb->setValue(sb->maximum());
+    }
+    else if(type == "SEND") {
+        ui->consoleSend->append(text);
+
+        QScrollBar *sb = ui->consoleSend->verticalScrollBar();
+        sb->setValue(sb->maximum());
+    }
 }
 
 void DGIpydrOne::updateConnectionTime(int time)
@@ -541,6 +628,8 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
         if(!firstTimeConnection) {
             mCompassNeedle2->setCurrentValue(value + 90);
             controller->updateOrientationDegrees(value);
+            ui->degreesLabel->setText(QString::number(value) + "°");
+
             firstTimeConnection = true;
         }
         break;
@@ -596,7 +685,14 @@ void DGIpydrOne::on_throttleSlider_valueChanged(int value)
 void DGIpydrOne::on_buttonSaveProfile_clicked()
 {
     ProfileEditor *profile = new ProfileEditor();
-    profile->saveProfile("test", 0, 0, 0);
+    profile->saveProfile(ui->profileName->text(),
+                         ui->serverIp->text(),
+                         ui->serverPort->value(),
+                         ui->maximalPowerSlider->value(),
+                         ui->maximalAngleSlider->value(),
+                         controller->gControlMode(),
+                         ui->leftRightCalibrate->value(),
+                         ui->frontBackCalibrate->value());
 }
 
 void DGIpydrOne::on_checkLED_stateChanged()
@@ -768,25 +864,28 @@ void DGIpydrOne::on_buttonMoreCompass_clicked()
 
 void DGIpydrOne::on_buttonStartSession_clicked()
 {
-    if(ui->buttonStartSession->isChecked()) {
-        if(controller->startSession()) {
-            ui->buttonStartSession->setText("Stop session");
+    if(ui->throttleSlider->value() == 0) {
+        if(!controller->isPlayingSession()) {
+            if(controller->startSession()) {
+                ui->buttonStartSession->setText("Stop session");
 
-            ui->throttleSlider->setValue(0);
-
-            joystick->setPosDirect(70, 70);
+                QMessageBox::information(this, tr("Information"), tr("You can turn on motor."), QMessageBox::Ok);
+            }
+            else {
+                ui->buttonStartSession->setChecked(false);
+            }
         }
         else {
-            ui->buttonStartSession->setChecked(false);
+            if(controller->stopSession()) {
+                ui->buttonStartSession->setText("Start session");
+            }
+            else {
+                ui->buttonStartSession->setChecked(true);
+            }
         }
     }
     else {
-        if(controller->stopSession()) {
-            ui->buttonStartSession->setText("Start session");
-        }
-        else {
-            ui->buttonStartSession->setChecked(true);
-        }
+        QMessageBox::warning(this, tr("Warning"), tr("Throttle not at the lowest position."), QMessageBox::Ok);
     }
 }
 
@@ -828,14 +927,14 @@ void DGIpydrOne::on_rotationSensibilitySlider_valueChanged(int value)
     controller->sendCommand("O " + QString::number(ui->axisSensibilitySlider->value()) + "|" + QString::number(value));
 }
 
-void DGIpydrOne::on_maximalPowerSliver_valueChanged(int value)
+void DGIpydrOne::on_maximalPowerSlider_valueChanged(int value)
 {
     controller->updateProperties(value, ui->maximalAngleSlider->value());
 }
 
 void DGIpydrOne::on_maximalAngleSlider_valueChanged(int value)
 {
-    controller->updateProperties(ui->maximalPowerSliver->value(), value);
+    controller->updateProperties(ui->maximalPowerSlider->value(), value);
 }
 
 void DGIpydrOne::on_buttonFastConnect_clicked()
@@ -843,4 +942,78 @@ void DGIpydrOne::on_buttonFastConnect_clicked()
     if(controller->connectionStatut == 0) {
         on_buttonConnect_clicked();
     }
+}
+
+void DGIpydrOne::on_profileName_textChanged(const QString &arg1)
+{
+    ui->profileLoaded->setText(arg1);
+}
+
+void DGIpydrOne::on_buttonLoadProfileFile_clicked()
+{
+    if(!controller->isPlayingSession()) {
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open profile"), "", tr("Profile file (*.DGIDrOne)"));
+
+        if(fileName != "") {
+            ProfileEditor *profile = new ProfileEditor(this);
+
+            if(profile->loadProfile(fileName)) {
+                QFileInfo file(QFile(fileName).fileName());
+
+                ui->profileLoaded->setText(file.fileName().split(".")[0]);
+                ui->serverIp->setText(profile->serverIp());
+                ui->serverPort->setValue(profile->serverPort());
+                ui->maximalPowerSlider->setValue(profile->maxPower());
+                ui->maximalAngleSlider->setValue(profile->maxAngle());
+
+                if(profile->controlMode() == 1) {
+                    controller->updateControlMode(1);
+                    ui->automaticMode->setChecked(true);
+                }
+                else {
+                    controller->updateControlMode(0);
+                    ui->manualMode->setChecked(true);
+                }
+
+                ui->leftRightCalibrate->setValue(profile->leftRightCalibration());
+                ui->frontBackCalibrate->setValue(profile->frontBackCalibration());
+
+                QMessageBox::information(this, tr("Information"), tr("Loaded profile."), QMessageBox::Ok);
+            }
+            else {
+                QMessageBox::critical(this, tr("Error"), tr("File doesn't exist."), QMessageBox::Ok);
+            }
+        }
+    }
+    else {
+        QMessageBox::warning(this, tr("Error"), tr("Stop session before."));
+    }
+}
+
+void DGIpydrOne::on_calibrateMotor1Slider_valueChanged(int value)
+{
+    controller->sendCommand("B 0|" + QString::number(qFloor((float)value/2)));
+
+    ui->calibrateMotor1Label->setText(QString::number(qFloor((float)value/2)) + "%");
+}
+
+void DGIpydrOne::on_calibrateMotor2Slider_valueChanged(int value)
+{
+    controller->sendCommand("B 1|" + QString::number(qFloor((float)value/2)));
+
+    ui->calibrateMotor2Label->setText(QString::number(qFloor((float)value/2)) + "%");
+}
+
+void DGIpydrOne::on_calibrateMotor3Slider_valueChanged(int value)
+{
+    controller->sendCommand("B 2|" + QString::number(qFloor((float)value/2)));
+
+    ui->calibrateMotor3Label->setText(QString::number(qFloor((float)value/2)) + "%");
+}
+
+void DGIpydrOne::on_calibrateMotor4Slider_valueChanged(int value)
+{
+    controller->sendCommand("B 3|" + QString::number(qFloor((float)value/2)));
+
+    ui->calibrateMotor4Label->setText(QString::number(qFloor((float)value/2)) + "%");
 }

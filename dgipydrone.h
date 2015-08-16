@@ -15,6 +15,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsView>
 #include <QProcess>
+#include <QFileDialog>
 
 namespace Ui {
 class DGIpydrOne;
@@ -36,7 +37,7 @@ private slots:
     void on_buttonSendCommand_clicked();
 
     void statutConnection(QString);
-    void updateConsole(QString);
+    void updateConsole(QString, QString);
     void updateConnectionTime(int);
     void updateInformationsInterface(QString, int);
 
@@ -72,11 +73,23 @@ private slots:
 
     void on_rotationSensibilitySlider_valueChanged(int value);
 
-    void on_maximalPowerSliver_valueChanged(int value);
+    void on_maximalPowerSlider_valueChanged(int value);
 
     void on_maximalAngleSlider_valueChanged(int value);
 
     void on_buttonFastConnect_clicked();
+
+    void on_profileName_textChanged(const QString &arg1);
+
+    void on_buttonLoadProfileFile_clicked();
+
+    void on_calibrateMotor1Slider_valueChanged(int value);
+
+    void on_calibrateMotor2Slider_valueChanged(int value);
+
+    void on_calibrateMotor3Slider_valueChanged(int value);
+
+    void on_calibrateMotor4Slider_valueChanged(int value);
 
 private:
     Ui::DGIpydrOne *ui;
@@ -125,7 +138,9 @@ private:
     bool useJoystick;
     bool calibrateJoystick;
 
-    bool pressedButtons[5] = {false, false, false, false};
+    bool pressedButtons[6] = {false, false, false, false, false, false};
+
+    int motorCalibrate;
 
 
 public slots:

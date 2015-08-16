@@ -21,6 +21,7 @@ public:
     void updatePositionTrottle(int);
     void updateOrientationDegrees(int);
     void updateControlMode(int);
+    int gControlMode();
 
     void connectRemote(QString, int);
     void disconnectRemote();
@@ -32,6 +33,7 @@ public:
 
     bool startSession();
     bool stopSession();
+    bool isPlayingSession();
 
     int connectionStatut;
 
@@ -50,14 +52,14 @@ private:
 
     quint16 sizeMessage;
 
+    int controlMode;
+
     int power;
 
     int degrees;
 
     int posX;
     int posY;
-
-    int controlMode;
 
     int leftRightCalibrate;
     int frontBackCalibrate;
@@ -87,7 +89,7 @@ private slots:
 
 signals:
     void updateStatutConnection(QString);
-    void updateConsole(QString);
+    void updateConsole(QString, QString);
     void updateConnectionTime(int);
     void updateInformations(QString, int);
 };

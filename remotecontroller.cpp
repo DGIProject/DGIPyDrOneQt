@@ -57,17 +57,17 @@ void remoteController::updatePositionJoystick(int xJoystick, int yJoystick)
         tempPosY = (int)((yJoystick > 70) ? (((float)maxAngle/45) * tempPosY) : -(((float)maxAngle/45) * tempPosY));
     }
 
+    if(tempPosX == -1) {
+        tempPosX = 0;
+    }
+
+    if(tempPosY == -1) {
+        tempPosY = 0;
+    }
+
     if(tempPosX != posX || tempPosY != posY) {
         posX = tempPosX;
         posY = tempPosY;
-
-        if(posX == -1) {
-            posX = 0;
-        }
-
-        if(posY == -1) {
-            posY = 0;
-        }
 
         sendCommandMotor();
 
@@ -80,9 +80,9 @@ void remoteController::updatePositionTrottle(int value)
 {
     power = qCeil(((float)maxPower / 100) * value);
 
-    if((power % 2) == 0) {
-        sendCommandMotor();
-    }
+    sendCommandMotor();
+
+    emit updateInformations("THROTTLE", power);
 }
 
 void remoteController::updateOrientationDegrees(int value)
@@ -96,6 +96,11 @@ void remoteController::updateControlMode(int mode)
 {
     controlMode = mode;
     sendCommand("M " + QString::number(mode));
+}
+
+int remoteController::gControlMode()
+{
+    return controlMode;
 }
 
 void remoteController::connectRemote(QString ip, int port)
@@ -124,14 +129,14 @@ void remoteController::dataReceive()
 
     analyzeCommand(message);
 
-    emit updateConsole("-DRONE- " + message);
+    emit updateConsole("RECEIVE", ("-DRONE- " + message));
 }
 
 void remoteController::connected()
 {
     connectionStatut = 2;
 
-    timerData->start(150);
+    timerData->start(125);
     timerServer->start(1000);
 
     emit updateStatutConnection("CONNECT");
@@ -201,7 +206,7 @@ void remoteController::sendCommandDrone()
     }
 
     if(connectionStatut == 2) {
-        qDebug() << "C " + lastCommand;
+        emit updateConsole("SEND", ("C " + lastCommand));
 
         socket->write(QByteArray(QString("C " + lastCommand).toStdString().c_str()));
     }
@@ -232,8 +237,6 @@ int remoteController::randomNumber() {
 void remoteController::sendCommandMotor()
 {
     sendCommand("P " + QString::number(power) + "|" + QString::number((int)degrees) + "|" + QString::number((int)posX) + "|" + QString::number((int)posY));
-
-    emit updateInformations("THROTTLE", power);
 }
 
 void remoteController::sendCalibrate(int lrCalibrate, int fbCalibrate)
@@ -249,7 +252,9 @@ bool remoteController::startSession()
     if(connectionStatut == 2) {
         playingSession = true;
 
-        sendCommand("H N");
+        socket->write(QByteArray(QString("C H N").toStdString().c_str()));
+        socket->write(QByteArray(QString("C M " + QString::number(controlMode)).toStdString().c_str()));
+        socket->write(QByteArray(QString("C C " + QString::number(leftRightCalibrate) + "|" + QString::number(frontBackCalibrate)).toStdString().c_str()));
 
         return true;
     }
@@ -263,6 +268,11 @@ bool remoteController::stopSession()
     playingSession = false;
 
     return true;
+}
+
+bool remoteController::isPlayingSession()
+{
+    return playingSession;
 }
 
 void remoteController::analyzeCommand(QString command)
