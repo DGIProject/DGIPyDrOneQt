@@ -138,9 +138,9 @@ private:
     bool useJoystick;
     bool calibrateJoystick;
 
-    bool pressedButtons[6] = {false, false, false, false, false, false};
+    bool pressedButtons[12] = {false, false, false, false, false, false, false, false, false, false, false, false};
 
-    int motorCalibrate;
+    float calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4;
 
 
 public slots:

@@ -681,10 +681,149 @@ QSlider::sub-page:vertical {
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
+      <widget class="QSlider" name="calibrateMotor1Slider">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>22</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-60</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="calibrateMotor3Slider">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>0</y>
+         <width>22</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-60</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="calibrateMotor4Slider">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>0</y>
+         <width>22</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-60</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="calibrateMotor2Slider">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>0</y>
+         <width>22</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-60</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line_14">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>50</y>
+         <width>41</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line_13">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>40</y>
+         <width>81</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="Line" name="line_15">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>10</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="motorCalibrateLabel">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>50</y>
+         <width>16</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
       <zorder>line_2</zorder>
       <zorder>line</zorder>
       <zorder>leftRightCalibrate</zorder>
       <zorder>frontBackCalibrate</zorder>
+      <zorder>calibrateMotor1Slider</zorder>
+      <zorder>calibrateMotor3Slider</zorder>
+      <zorder>calibrateMotor4Slider</zorder>
+      <zorder>calibrateMotor2Slider</zorder>
+      <zorder>line_14</zorder>
+      <zorder>line_13</zorder>
+      <zorder>line_15</zorder>
+      <zorder>motorCalibrateLabel</zorder>
      </widget>
      <widget class="QGroupBox" name="groupBox_5">
       <property name="geometry">
@@ -938,143 +1077,12 @@ QProgressBar::chunk {
       <property name="title">
        <string>Calibrate</string>
       </property>
-      <widget class="QLabel" name="motorCalibrateLabel">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>16</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-      <widget class="QSlider" name="calibrateMotor1Slider">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>20</y>
-         <width>22</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>-60</number>
-       </property>
-       <property name="maximum">
-        <number>60</number>
-       </property>
-       <property name="singleStep">
-        <number>1</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-      <widget class="QSlider" name="calibrateMotor3Slider">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>30</y>
-         <width>22</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>-60</number>
-       </property>
-       <property name="maximum">
-        <number>60</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-      <widget class="QSlider" name="calibrateMotor2Slider">
-       <property name="geometry">
-        <rect>
-         <x>130</x>
-         <y>20</y>
-         <width>22</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>-60</number>
-       </property>
-       <property name="maximum">
-        <number>60</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-      <widget class="QSlider" name="calibrateMotor4Slider">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>30</y>
-         <width>22</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>-60</number>
-       </property>
-       <property name="maximum">
-        <number>60</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-      <widget class="Line" name="line_13">
-       <property name="geometry">
-        <rect>
-         <x>57</x>
-         <y>35</y>
-         <width>81</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-      <widget class="Line" name="line_14">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>30</y>
-         <width>41</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-      <widget class="Line" name="line_15">
-       <property name="geometry">
-        <rect>
-         <x>127</x>
-         <y>30</y>
-         <width>31</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
       <widget class="QLabel" name="calibrateMotor1Label">
        <property name="geometry">
         <rect>
          <x>30</x>
-         <y>0</y>
-         <width>31</width>
+         <y>10</y>
+         <width>41</width>
          <height>20</height>
         </rect>
        </property>
@@ -1087,7 +1095,7 @@ QProgressBar::chunk {
         <rect>
          <x>100</x>
          <y>10</y>
-         <width>31</width>
+         <width>41</width>
          <height>20</height>
         </rect>
        </property>
@@ -1098,9 +1106,9 @@ QProgressBar::chunk {
       <widget class="QLabel" name="calibrateMotor3Label">
        <property name="geometry">
         <rect>
-         <x>60</x>
-         <y>10</y>
-         <width>31</width>
+         <x>100</x>
+         <y>40</y>
+         <width>41</width>
          <height>20</height>
         </rect>
        </property>
@@ -1111,9 +1119,9 @@ QProgressBar::chunk {
       <widget class="QLabel" name="calibrateMotor2Label">
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>0</y>
-         <width>31</width>
+         <x>30</x>
+         <y>40</y>
+         <width>41</width>
          <height>20</height>
         </rect>
        </property>
@@ -1121,18 +1129,6 @@ QProgressBar::chunk {
         <string>0%</string>
        </property>
       </widget>
-      <zorder>calibrateMotor1Label</zorder>
-      <zorder>line_15</zorder>
-      <zorder>line_14</zorder>
-      <zorder>line_13</zorder>
-      <zorder>motorCalibrateLabel</zorder>
-      <zorder>calibrateMotor1Slider</zorder>
-      <zorder>calibrateMotor3Slider</zorder>
-      <zorder>calibrateMotor2Slider</zorder>
-      <zorder>calibrateMotor4Slider</zorder>
-      <zorder>calibrateMotor4Label</zorder>
-      <zorder>calibrateMotor3Label</zorder>
-      <zorder>calibrateMotor2Label</zorder>
      </widget>
      <zorder>throttleSlider</zorder>
      <zorder>checkLED</zorder>

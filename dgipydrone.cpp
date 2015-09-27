@@ -125,7 +125,7 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 
     firstTimeConnection = false;
 
-    motorCalibrate = 0;
+    calibrateMotor1 = calibrateMotor2 = calibrateMotor3 = calibrateMotor4 = 0;
 
     vLeftSonar = vRightSonar = vFrontSonar = vBackSonar = vUpSonar = vBackSonar = vDegrees = vVerticalSpeed = vHorizontalSpeed = vPressure = 0;
 
@@ -273,7 +273,165 @@ void DGIpydrOne::readJoystickState()
         int povXJoystick = sf::Joystick::getAxisPosition(0, sf::Joystick::PovX);
         int povYJoystick = sf::Joystick::getAxisPosition(0, sf::Joystick::PovY);
 
+        qDebug() << povYJoystick;
+
         if(calibrateJoystick) {
+            if(povXJoystick == -100) {
+                if(!pressedButtons[4]) {
+                    //go left
+                    calibrateMotor1--;
+                    calibrateMotor2--;
+                    calibrateMotor3++;
+                    calibrateMotor4++;
+                }
+
+                pressedButtons[4] = true;
+            }
+            else {
+                pressedButtons[4] = false;
+            }
+
+            if(povXJoystick == 100) {
+                if(!pressedButtons[5]) {
+                    //go right
+                    calibrateMotor1++;
+                    calibrateMotor2++;
+                    calibrateMotor3--;
+                    calibrateMotor4--;
+                }
+
+                pressedButtons[5] = true;
+            }
+            else {
+                pressedButtons[5] = false;
+            }
+
+            if(povYJoystick == 100) {
+                if(!pressedButtons[6]) {
+                    //go front
+                    calibrateMotor1--;
+                    calibrateMotor2++;
+                    calibrateMotor3++;
+                    calibrateMotor4--;
+                }
+
+                pressedButtons[6] = true;
+            }
+            else {
+                pressedButtons[6] = false;
+            }
+
+            if(povYJoystick == -100) {
+                if(!pressedButtons[7]) {
+                    //go back
+                    calibrateMotor1++;
+                    calibrateMotor2--;
+                    calibrateMotor3--;
+                    calibrateMotor4++;
+                }
+
+                pressedButtons[7] = true;
+            }
+            else {
+                pressedButtons[7] = false;
+            }
+
+            if(povXJoystick == -70 && povYJoystick == 70) {
+                if(!pressedButtons[8]) {
+                    //go front left
+                    calibrateMotor1--;
+                    calibrateMotor2--;
+                    calibrateMotor3++;
+                    calibrateMotor4--;
+                }
+
+                pressedButtons[8] = true;
+            }
+            else {
+                pressedButtons[9] = false;
+            }
+
+            if(povXJoystick == -70 && povYJoystick == -70) {
+                if(!pressedButtons[9]) {
+                    //go back left
+                    calibrateMotor1--;
+                    calibrateMotor2--;
+                    calibrateMotor3--;
+                    calibrateMotor4++;
+                }
+
+                pressedButtons[9] = true;
+            }
+            else {
+                pressedButtons[9] = false;
+            }
+
+            if(povXJoystick == 70 && povYJoystick == 70) {
+                if(!pressedButtons[10]) {
+                    //go front right
+                    calibrateMotor1--;
+                    calibrateMotor2++;
+                    calibrateMotor3--;
+                    calibrateMotor4--;
+                }
+
+                pressedButtons[10] = true;
+            }
+            else {
+                pressedButtons[10] = false;
+            }
+
+            if(povXJoystick == 70 && povYJoystick == -70) {
+                if(!pressedButtons[11]) {
+                    //go back right
+                    calibrateMotor1++;
+                    calibrateMotor2--;
+                    calibrateMotor3--;
+                    calibrateMotor4--;
+                }
+
+                pressedButtons[11] = true;
+            }
+            else {
+                pressedButtons[11] = false;
+            }
+
+            /*
+            if(povXJoystick == -70 && povYJoystick == 70) {
+                //go front left
+                calibrateMotor1 -= 0.05;
+                calibrateMotor2 -= 0.05;
+                calibrateMotor3 += 0.05;
+                calibrateMotor4 -= 0.05;
+            }
+            else if(povXJoystick == -70 && povYJoystick == -70) {
+                //go back left
+                calibrateMotor1 -= 0.05;
+                calibrateMotor2 -= 0.05;
+                calibrateMotor3 -= 0.05;
+                calibrateMotor4 += 0.05;
+            }
+            else if(povXJoystick == 70 && povYJoystick == 70) {
+                //go front right
+                calibrateMotor1 -= 0.05;
+                calibrateMotor2 += 0.05;
+                calibrateMotor3 -= 0.05;
+                calibrateMotor4 -= 0.05;
+            }
+            else if(povXJoystick == 70 && povYJoystick == -70) {
+                //go back right
+                calibrateMotor1 += 0.05;
+                calibrateMotor2 -= 0.05;
+                calibrateMotor3 -= 0.05;
+                calibrateMotor4 -= 0.05;
+            }
+            */
+
+            ui->calibrateMotor1Label->setText(QString::number(calibrateMotor1) + "%");
+            ui->calibrateMotor2Label->setText(QString::number(calibrateMotor2) + "%");
+            ui->calibrateMotor3Label->setText(QString::number(calibrateMotor3) + "%");
+            ui->calibrateMotor4Label->setText(QString::number(calibrateMotor4) + "%");
+
             /*
             if(povXJoystick == 100 || povXJoystick == 70) {
                 ui->leftRightCalibrate->setValue(ui->leftRightCalibrate->value() + 1);
@@ -290,6 +448,7 @@ void DGIpydrOne::readJoystickState()
             }
             */
 
+            /*
             if(povXJoystick == 100) {
                 if(!pressedButtons[4]) {
                     if(motorCalibrate == 3) {
@@ -364,6 +523,7 @@ void DGIpydrOne::readJoystickState()
                     break;
                 }
             }
+            */
         }
         else {
             if(povXJoystick == 100 || povXJoystick == 70) {
