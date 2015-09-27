@@ -67,7 +67,7 @@ void remoteController::updatePositionJoystick(int xJoystick, int yJoystick)
 
     if(tempPosX != posX || tempPosY != posY) {
         posX = tempPosX;
-        posY = tempPosY;
+        posY = -tempPosY;
 
         sendCommandMotor();
 
@@ -252,7 +252,7 @@ bool remoteController::startSession()
     if(connectionStatut == 2) {
         playingSession = true;
 
-        socket->write(QByteArray(QString("C H N").toStdString().c_str()));
+        socket->write(QByteArray(QString("C L N").toStdString().c_str()));
         socket->write(QByteArray(QString("C M " + QString::number(controlMode)).toStdString().c_str()));
         socket->write(QByteArray(QString("C C " + QString::number(leftRightCalibrate) + "|" + QString::number(frontBackCalibrate)).toStdString().c_str()));
 
@@ -266,6 +266,8 @@ bool remoteController::startSession()
 bool remoteController::stopSession()
 {
     playingSession = false;
+
+    socket->write(QByteArray(QString("C L Y").toStdString().c_str()));
 
     return true;
 }
@@ -293,7 +295,7 @@ void remoteController::analyzeCommand(QString command)
         emit updateInformations("VSPEED", (int)dataMessage[6].toFloat());
         emit updateInformations("HSPEED", (int)dataMessage[7].toFloat());
         emit updateInformations("DEGREES", dataMessage[8].toInt());
-        emit updateInformations("BATTERY", dataMessage[9].toInt());
+        emit updateInformations("BATTERY", (int)(dataMessage[9].toFloat() * 100));
         emit updateInformations("PRESSURE", dataMessage[10].toInt());
         emit updateInformations("TEMPERATURE", dataMessage[11].toInt());
         emit updateInformations("HUMIDITY", dataMessage[12].toInt());
@@ -305,7 +307,7 @@ void remoteController::analyzeCommand(QString command)
         emit updateInformations("USESONARS", dataMessage[1].toInt());
         emit updateInformations("AXISSENSIBILITY", dataMessage[2].toInt());
         emit updateInformations("ROTATIONSENSIBILITY", dataMessage[3].toInt());
-        emit updateInformations("FLASHINGLED", dataMessage[4].toInt());
+        //emit updateInformations("FLASHINGLED", dataMessage[4].toInt());
 
         qDebug() << dataMessage;
     }

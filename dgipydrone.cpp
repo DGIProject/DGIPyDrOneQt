@@ -29,6 +29,9 @@ DGIpydrOne::DGIpydrOne(QWidget *parent) :
 
     ui->buttonCancelConnect->setEnabled(false);
 
+    ui->buttonStartSession->setText("Start session");
+    ui->buttonStartSession->setStyleSheet("background-color: rgb(11, 190, 68);");
+
     mCompassGauge = new QcGaugeWidget;
     mCompassGauge->addBackground(99);
     QcBackgroundItem *bkg1 = mCompassGauge->addBackground(92);
@@ -195,12 +198,10 @@ void DGIpydrOne::readJoystickState()
             return;
         }
 
-        //sleep button
+        //start session button
         if (sf::Joystick::isButtonPressed(0, 0))
         {
             if(!pressedButtons[0]) {
-                //ui->checkCollision->setChecked(ui->checkCollision->isChecked() ? false : true);
-
                 ui->buttonStartSession->click();
             }
 
@@ -210,11 +211,18 @@ void DGIpydrOne::readJoystickState()
             pressedButtons[0] = false;
         }
 
-        //led button
+        //control mode button
         if (sf::Joystick::isButtonPressed(0, 2))
         {
             if(!pressedButtons[2]) {
-                ui->checkLED->setChecked(ui->checkLED->isChecked() ? false : true);
+                if(controller->gControlMode() == 1) {
+                    ui->manualMode->setChecked(true);
+                    controller->updateControlMode(0);
+                }
+                else {
+                    ui->automaticMode->setChecked(true);
+                    controller->updateControlMode(1);
+                }
             }
 
             pressedButtons[2] = true;
@@ -282,7 +290,7 @@ void DGIpydrOne::readJoystickState()
             }
             */
 
-            if(povXJoystick == 100 || povXJoystick == 70) {
+            if(povXJoystick == 100) {
                 if(!pressedButtons[4]) {
                     if(motorCalibrate == 3) {
                         motorCalibrate = 0;
@@ -300,7 +308,7 @@ void DGIpydrOne::readJoystickState()
                 pressedButtons[4] = false;
             }
 
-            if(povXJoystick == -100 || povXJoystick == -70) {
+            if(povXJoystick == -100) {
                 if(!pressedButtons[5]) {
                     if(motorCalibrate == 0) {
                         motorCalibrate = 3;
@@ -318,7 +326,7 @@ void DGIpydrOne::readJoystickState()
                 pressedButtons[5] = false;
             }
 
-            if(povYJoystick == 100 || povYJoystick == 70) {
+            if(povYJoystick == 100) {
                 switch (motorCalibrate) {
                 case 0:
                     ui->calibrateMotor1Slider->setValue(ui->calibrateMotor1Slider->value() + 1);
@@ -337,7 +345,7 @@ void DGIpydrOne::readJoystickState()
                     break;
                 }
             }
-            else if(povYJoystick == -100 || povYJoystick == -70) {
+            else if(povYJoystick == -100) {
                 switch (motorCalibrate) {
                 case 0:
                     ui->calibrateMotor1Slider->setValue(ui->calibrateMotor1Slider->value() - 1);
@@ -642,7 +650,7 @@ void DGIpydrOne::updateInformationsInterface(QString type, int value)
         ui->HSLabel->setText(QString::number(value) +  " M/S");
         break;
     case 12:
-        ui->batteryLevelBar->setValue((int)(((float)value / 12) * 100));
+        ui->batteryLevelBar->setValue((int)((((float)value - 1000) / 300) * 100));
         break;
     case 13:
         vPressure = value;
@@ -868,19 +876,15 @@ void DGIpydrOne::on_buttonStartSession_clicked()
         if(!controller->isPlayingSession()) {
             if(controller->startSession()) {
                 ui->buttonStartSession->setText("Stop session");
+                ui->buttonStartSession->setStyleSheet("background-color: rgb(255, 74, 77);");
 
-                QMessageBox::information(this, tr("Information"), tr("You can turn on motor."), QMessageBox::Ok);
-            }
-            else {
-                ui->buttonStartSession->setChecked(false);
+                QMessageBox::information(this, tr("Information"), tr("You can turn-on motors."), QMessageBox::Ok);
             }
         }
         else {
             if(controller->stopSession()) {
                 ui->buttonStartSession->setText("Start session");
-            }
-            else {
-                ui->buttonStartSession->setChecked(true);
+                ui->buttonStartSession->setStyleSheet("background-color: rgb(11, 190, 68);");
             }
         }
     }
@@ -992,28 +996,28 @@ void DGIpydrOne::on_buttonLoadProfileFile_clicked()
 
 void DGIpydrOne::on_calibrateMotor1Slider_valueChanged(int value)
 {
-    controller->sendCommand("B 0|" + QString::number(qFloor((float)value/2)));
+    controller->sendCommand("B 0|" + QString::number(value));
 
-    ui->calibrateMotor1Label->setText(QString::number(qFloor((float)value/2)) + "%");
+    ui->calibrateMotor1Label->setText(QString::number(value) + "%");
 }
 
 void DGIpydrOne::on_calibrateMotor2Slider_valueChanged(int value)
 {
-    controller->sendCommand("B 1|" + QString::number(qFloor((float)value/2)));
+    controller->sendCommand("B 1|" + QString::number(value));
 
-    ui->calibrateMotor2Label->setText(QString::number(qFloor((float)value/2)) + "%");
+    ui->calibrateMotor2Label->setText(QString::number(value) + "%");
 }
 
 void DGIpydrOne::on_calibrateMotor3Slider_valueChanged(int value)
 {
-    controller->sendCommand("B 2|" + QString::number(qFloor((float)value/2)));
+    controller->sendCommand("B 2|" + QString::number(value));
 
-    ui->calibrateMotor3Label->setText(QString::number(qFloor((float)value/2)) + "%");
+    ui->calibrateMotor3Label->setText(QString::number(value) + "%");
 }
 
 void DGIpydrOne::on_calibrateMotor4Slider_valueChanged(int value)
 {
-    controller->sendCommand("B 3|" + QString::number(qFloor((float)value/2)));
+    controller->sendCommand("B 3|" + QString::number(value));
 
-    ui->calibrateMotor4Label->setText(QString::number(qFloor((float)value/2)) + "%");
+    ui->calibrateMotor4Label->setText(QString::number(value) + "%");
 }

@@ -238,6 +238,9 @@ QSlider::sub-page:vertical {
       </property>
      </widget>
      <widget class="QCheckBox" name="checkLED">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -431,20 +434,13 @@ QSlider::sub-page:vertical {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">QPushButton {
-	background-color: rgb(11, 190, 68);
-	color: rgb(0, 0, 0);
-}
-
-QPushButton:checked  {
-	background-color: rgb(255, 74, 77);
-}</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>Start session</string>
       </property>
       <property name="checkable">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="checked">
        <bool>false</bool>
@@ -551,8 +547,8 @@ QPushButton:checked  {
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>-70</y>
+        <x>480</x>
+        <y>140</y>
         <width>181</width>
         <height>81</height>
        </rect>
