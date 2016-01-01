@@ -1129,6 +1129,19 @@ QProgressBar::chunk {
         <string>0%</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="buttonResetCalibration">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>30</y>
+         <width>51</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
      </widget>
      <zorder>throttleSlider</zorder>
      <zorder>checkLED</zorder>

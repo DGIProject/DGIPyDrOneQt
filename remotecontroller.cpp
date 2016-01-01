@@ -199,6 +199,11 @@ void remoteController::sendCommand(QString command) {
     lastCommand = command;
 }
 
+void remoteController::sendDirectCommand(QString command) {
+    if(connectionStatut == 2)
+        socket->write(QByteArray(QString("C " + command).toStdString().c_str()));
+}
+
 void remoteController::sendCommandDrone()
 {
     if(!playingSession) {
@@ -239,12 +244,10 @@ void remoteController::sendCommandMotor()
     sendCommand("P " + QString::number(power) + "|" + QString::number((int)degrees) + "|" + QString::number((int)posX) + "|" + QString::number((int)posY));
 }
 
-void remoteController::sendCalibrate(int lrCalibrate, int fbCalibrate)
+void remoteController::sendCalibrate(int calibrateMotor1, int calibrateMotor2, int calibrateMotor3, int calibrateMotor4)
 {
-    leftRightCalibrate = lrCalibrate;
-    frontBackCalibrate = fbCalibrate;
-
-    sendCommand("C " + QString::number(leftRightCalibrate) + "|" + QString::number(frontBackCalibrate));
+    if(connectionStatut == 2)
+        socket->write(QByteArray(QString("C B " + QString::number(calibrateMotor1) + "|" + QString::number(calibrateMotor2) + "|" + QString::number(calibrateMotor3) + "|" + QString::number(calibrateMotor4)).toStdString().c_str()));
 }
 
 bool remoteController::startSession()
@@ -290,8 +293,8 @@ void remoteController::analyzeCommand(QString command)
         emit updateInformations("RSONAR", dataMessage[1].toInt());
         emit updateInformations("FSONAR", dataMessage[2].toInt());
         emit updateInformations("BSONAR", dataMessage[3].toInt());
-        emit updateInformations("ROLL", (int)dataMessage[4].toFloat());
-        emit updateInformations("PITCH", (int)dataMessage[5].toFloat());
+        emit updateInformations("PITCH", (int)dataMessage[4].toFloat());
+        emit updateInformations("ROLL", (int)dataMessage[5].toFloat());
         emit updateInformations("VSPEED", (int)dataMessage[6].toFloat());
         emit updateInformations("HSPEED", (int)dataMessage[7].toFloat());
         emit updateInformations("DEGREES", dataMessage[8].toInt());

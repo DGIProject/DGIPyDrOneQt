@@ -25,11 +25,13 @@ public:
 
     void connectRemote(QString, int);
     void disconnectRemote();
+
     void sendCommand(QString);
+    void sendDirectCommand(QString);
 
     void updateProperties(int, int);
 
-    void sendCalibrate(int, int);
+    void sendCalibrate(int, int, int, int);
 
     bool startSession();
     bool stopSession();

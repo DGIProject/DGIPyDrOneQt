@@ -91,6 +91,8 @@ private slots:
 
     void on_calibrateMotor4Slider_valueChanged(int value);
 
+    void on_buttonResetCalibration_clicked();
+
 private:
     Ui::DGIpydrOne *ui;
 

@@ -154,6 +154,10 @@ void DGIpydrOne::on_buttonConnect_clicked()
 void DGIpydrOne::on_buttonCancelConnect_clicked()
 {
     ui->buttonConnect->setEnabled(true);
+
+    if(controller->isPlayingSession())
+        ui->buttonStartSession->click();
+
     controller->disconnectRemote();
 
     updateConsole("RECEIVE", tr("<em>Canceled connection.</em>"));
@@ -273,8 +277,6 @@ void DGIpydrOne::readJoystickState()
         int povXJoystick = sf::Joystick::getAxisPosition(0, sf::Joystick::PovX);
         int povYJoystick = sf::Joystick::getAxisPosition(0, sf::Joystick::PovY);
 
-        qDebug() << povYJoystick;
-
         if(calibrateJoystick) {
             if(povXJoystick == -100) {
                 if(!pressedButtons[4]) {
@@ -283,6 +285,8 @@ void DGIpydrOne::readJoystickState()
                     calibrateMotor2--;
                     calibrateMotor3++;
                     calibrateMotor4++;
+
+                    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
                 }
 
                 pressedButtons[4] = true;
@@ -298,6 +302,8 @@ void DGIpydrOne::readJoystickState()
                     calibrateMotor2++;
                     calibrateMotor3--;
                     calibrateMotor4--;
+
+                    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
                 }
 
                 pressedButtons[5] = true;
@@ -313,6 +319,8 @@ void DGIpydrOne::readJoystickState()
                     calibrateMotor2++;
                     calibrateMotor3++;
                     calibrateMotor4--;
+
+                    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
                 }
 
                 pressedButtons[6] = true;
@@ -328,6 +336,8 @@ void DGIpydrOne::readJoystickState()
                     calibrateMotor2--;
                     calibrateMotor3--;
                     calibrateMotor4++;
+
+                    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
                 }
 
                 pressedButtons[7] = true;
@@ -343,6 +353,8 @@ void DGIpydrOne::readJoystickState()
                     calibrateMotor2--;
                     calibrateMotor3++;
                     calibrateMotor4--;
+
+                    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
                 }
 
                 pressedButtons[8] = true;
@@ -358,6 +370,8 @@ void DGIpydrOne::readJoystickState()
                     calibrateMotor2--;
                     calibrateMotor3--;
                     calibrateMotor4++;
+
+                    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
                 }
 
                 pressedButtons[9] = true;
@@ -373,6 +387,8 @@ void DGIpydrOne::readJoystickState()
                     calibrateMotor2++;
                     calibrateMotor3--;
                     calibrateMotor4--;
+
+                    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
                 }
 
                 pressedButtons[10] = true;
@@ -388,6 +404,8 @@ void DGIpydrOne::readJoystickState()
                     calibrateMotor2--;
                     calibrateMotor3--;
                     calibrateMotor4--;
+
+                    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
                 }
 
                 pressedButtons[11] = true;
@@ -395,37 +413,6 @@ void DGIpydrOne::readJoystickState()
             else {
                 pressedButtons[11] = false;
             }
-
-            /*
-            if(povXJoystick == -70 && povYJoystick == 70) {
-                //go front left
-                calibrateMotor1 -= 0.05;
-                calibrateMotor2 -= 0.05;
-                calibrateMotor3 += 0.05;
-                calibrateMotor4 -= 0.05;
-            }
-            else if(povXJoystick == -70 && povYJoystick == -70) {
-                //go back left
-                calibrateMotor1 -= 0.05;
-                calibrateMotor2 -= 0.05;
-                calibrateMotor3 -= 0.05;
-                calibrateMotor4 += 0.05;
-            }
-            else if(povXJoystick == 70 && povYJoystick == 70) {
-                //go front right
-                calibrateMotor1 -= 0.05;
-                calibrateMotor2 += 0.05;
-                calibrateMotor3 -= 0.05;
-                calibrateMotor4 -= 0.05;
-            }
-            else if(povXJoystick == 70 && povYJoystick == -70) {
-                //go back right
-                calibrateMotor1 += 0.05;
-                calibrateMotor2 -= 0.05;
-                calibrateMotor3 -= 0.05;
-                calibrateMotor4 -= 0.05;
-            }
-            */
 
             ui->calibrateMotor1Label->setText(QString::number(calibrateMotor1) + "%");
             ui->calibrateMotor2Label->setText(QString::number(calibrateMotor2) + "%");
@@ -945,12 +932,12 @@ void DGIpydrOne::drawDroneInformations()
 
 void DGIpydrOne::on_leftRightCalibrate_valueChanged(int value)
 {
-    controller->sendCalibrate(value, ui->frontBackCalibrate->value());
+    //controller->sendCalibrate(value, ui->frontBackCalibrate->value());
 }
 
 void DGIpydrOne::on_frontBackCalibrate_valueChanged(int value)
 {
-    controller->sendCalibrate(ui->leftRightCalibrate->value(), value);
+    //controller->sendCalibrate(ui->leftRightCalibrate->value(), value);
 }
 
 void DGIpydrOne::on_checkCollision_stateChanged()
@@ -979,7 +966,7 @@ void DGIpydrOne::on_automaticMode_clicked()
 
 void DGIpydrOne::on_buttonCalibrateDrone_clicked()
 {
-    controller->sendCommand("A Y");
+    controller->sendDirectCommand("A Y");
 }
 
 void DGIpydrOne::on_buttonLessCompass_clicked()
@@ -1032,24 +1019,22 @@ void DGIpydrOne::on_buttonMoreCompass_clicked()
 
 void DGIpydrOne::on_buttonStartSession_clicked()
 {
-    if(ui->throttleSlider->value() == 0) {
-        if(!controller->isPlayingSession()) {
-            if(controller->startSession()) {
-                ui->buttonStartSession->setText("Stop session");
-                ui->buttonStartSession->setStyleSheet("background-color: rgb(255, 74, 77);");
+    if(!controller->isPlayingSession()) {
+        if(controller->startSession() && ui->throttleSlider->value() == 0) {
+            ui->buttonStartSession->setText("Stop session");
+            ui->buttonStartSession->setStyleSheet("background-color: rgb(255, 74, 77);");
 
-                QMessageBox::information(this, tr("Information"), tr("You can turn-on motors."), QMessageBox::Ok);
-            }
+            QMessageBox::information(this, tr("Information"), tr("You can turn-on motors."), QMessageBox::Ok);
         }
         else {
-            if(controller->stopSession()) {
-                ui->buttonStartSession->setText("Start session");
-                ui->buttonStartSession->setStyleSheet("background-color: rgb(11, 190, 68);");
-            }
+            QMessageBox::warning(this, tr("Warning"), tr("Throttle not at the lowest position or not connected to the drone."), QMessageBox::Ok);
         }
     }
     else {
-        QMessageBox::warning(this, tr("Warning"), tr("Throttle not at the lowest position."), QMessageBox::Ok);
+        if(controller->stopSession()) {
+            ui->buttonStartSession->setText("Start session");
+            ui->buttonStartSession->setStyleSheet("background-color: rgb(11, 190, 68);");
+        }
     }
 }
 
@@ -1180,4 +1165,11 @@ void DGIpydrOne::on_calibrateMotor4Slider_valueChanged(int value)
     controller->sendCommand("B 3|" + QString::number(value));
 
     ui->calibrateMotor4Label->setText(QString::number(value) + "%");
+}
+
+void DGIpydrOne::on_buttonResetCalibration_clicked()
+{
+    calibrateMotor1 = calibrateMotor2 = calibrateMotor3 = calibrateMotor4 = 0;
+
+    controller->sendCalibrate(calibrateMotor1, calibrateMotor2, calibrateMotor3, calibrateMotor4);
 }
